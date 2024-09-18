@@ -4,6 +4,8 @@ project(tinyla)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(Catch2 3 REQUIRED)
+
 include_directories(include)
 
 if (MSVC)
