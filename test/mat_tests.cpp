@@ -88,7 +88,7 @@ TEST_CASE("Mat4 is constructed as identity matrix", "[Mat4]")
 
 TEST_CASE("Mat4 scaling", "[Mat4]")
 {
-    auto tglMatrix = tinyla::Mat4::scaling(tinyla::Vec3{2.0f, 3.0f, 4.0f});
+    auto tglMatrix = tinyla::Mat4::scaling(tinyla::Vec3f{2.0f, 3.0f, 4.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::scale(glmMatrix, glm::vec3(2.0f, 3.0f, 4.0f));
@@ -99,7 +99,7 @@ TEST_CASE("Mat4 scaling", "[Mat4]")
 TEST_CASE("Mat4 preScale", "[Mat4]")
 {
     auto tglMatrix = unique;
-    tglMatrix.preScale(tinyla::Vec3{2.0f, 3.0f, 4.0f});
+    tglMatrix.preScale(tinyla::Vec3f{2.0f, 3.0f, 4.0f});
 
     auto scalingMatrix = glm::mat4(1.0f);
     scalingMatrix = glm::scale(scalingMatrix, glm::vec3(2.0f, 3.0f, 4.0f));
@@ -111,7 +111,7 @@ TEST_CASE("Mat4 preScale", "[Mat4]")
 TEST_CASE("Mat4 postScale", "[Mat4]")
 {
     auto tglMatrix = unique;
-    tglMatrix.postScale(tinyla::Vec3{2.0f, 3.0f, 4.0f});
+    tglMatrix.postScale(tinyla::Vec3f{2.0f, 3.0f, 4.0f});
 
     auto glmMatrix = glm::make_mat4(unique.data());
     glmMatrix = glm::scale(glmMatrix, glm::vec3(2.0f, 3.0f, 4.0f));
@@ -123,12 +123,12 @@ TEST_CASE("Mat4 scaling benchmark", "[Mat4]")
 {
     BENCHMARK("preScale") {
         auto m = unique;
-        m.preScale(tinyla::Vec3{2.0f, 3.0f, 4.0f});
+        m.preScale(tinyla::Vec3f{2.0f, 3.0f, 4.0f});
         return m;
     };
 
     BENCHMARK("preScale by matrix multiplication") {
-        auto t = tinyla::Mat4::scaling(tinyla::Vec3{2.0f, 3.0f, 4.0f});
+        auto t = tinyla::Mat4::scaling(tinyla::Vec3f{2.0f, 3.0f, 4.0f});
         auto m = unique;
         m = t * m;
         return m;
@@ -137,7 +137,7 @@ TEST_CASE("Mat4 scaling benchmark", "[Mat4]")
 
 TEST_CASE("Mat4 translation", "[Mat4]")
 {
-    auto tglMatrix = tinyla::Mat4::translation(tinyla::Vec3{1.0f, 2.0f, 3.0f});
+    auto tglMatrix = tinyla::Mat4::translation(tinyla::Vec3f{1.0f, 2.0f, 3.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
@@ -148,7 +148,7 @@ TEST_CASE("Mat4 translation", "[Mat4]")
 TEST_CASE("Mat4 preTranslate", "[Mat4]")
 {
     auto tglMatrix = unique;
-    tglMatrix.preTranslate(tinyla::Vec3{1.0f, 2.0f, 3.0f});
+    tglMatrix.preTranslate(tinyla::Vec3f{1.0f, 2.0f, 3.0f});
 
     auto translationMatrix = glm::mat4(1.0f);
     translationMatrix = glm::translate(translationMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
@@ -161,12 +161,12 @@ TEST_CASE("Mat4 translation benchmark", "[Mat4]")
 {
     BENCHMARK("preTranslate") {
         auto m = unique;
-        m.preTranslate(tinyla::Vec3{1.0f, 2.0f, 3.0f});
+        m.preTranslate(tinyla::Vec3f{1.0f, 2.0f, 3.0f});
         return m;
     };
 
     BENCHMARK("preTranslate by matrix multiplication") {
-        auto t = tinyla::Mat4::translation(tinyla::Vec3{1.0f, 2.0f, 3.0f});
+        auto t = tinyla::Mat4::translation(tinyla::Vec3f{1.0f, 2.0f, 3.0f});
         auto m = unique;
         m = t * m;
         return m;
@@ -176,7 +176,7 @@ TEST_CASE("Mat4 translation benchmark", "[Mat4]")
 TEST_CASE("Mat4 postTranslate", "[Mat4]")
 {
     auto tglMatrix = tinyla::Mat4(tinyla::MatInit::Identity);
-    tglMatrix.postTranslate(tinyla::Vec3{1.0f, 2.0f, 3.0f});
+    tglMatrix.postTranslate(tinyla::Vec3f{1.0f, 2.0f, 3.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::translate(glmMatrix, glm::vec3(1.0f, 2.0f, 3.0f));
@@ -199,7 +199,7 @@ TEST_CASE("Mat4 preRotate around x-axis", "[Mat4]")
 TEST_CASE("Mat4 postRotate around x-axis", "[Mat4]")
 {
     auto tglMatrix = tinyla::Mat4(tinyla::MatInit::Identity);
-    tglMatrix.postRotate(45.0f, tinyla::Vec3{1.0f, 0.0f, 0.0f});
+    tglMatrix.postRotate(45.0f, tinyla::Vec3f{1.0f, 0.0f, 0.0f});
 
     auto glmMatrix = glm::mat4(1.0f);
     glmMatrix = glm::rotate(glmMatrix, tinyla::degreesToRadians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));

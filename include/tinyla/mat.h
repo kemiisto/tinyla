@@ -35,7 +35,7 @@ namespace tinyla
         static Mat rotation(T angle, const Vec<N-1,T>& axis) requires (N == 4);
         static Mat perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
 
-        Mat(MatInit init, Vec<N,T> v = {});
+        explicit Mat(MatInit init, Vec<N,T> v = {});
         Mat(std::initializer_list<T> values);
 
         constexpr T& operator()(std::size_t i, std::size_t j);
@@ -105,7 +105,7 @@ requires(N >= 3)
 tinyla::Mat<N,T>::Mat(std::initializer_list<T> values)
 {
     assert(values.size() == N*N);
-    typename std::initializer_list<T>::iterator it = values.begin();
+    auto it = values.begin();
     for (std::size_t i = 0; i < N; ++i) {
         for (std::size_t j = 0; j < N; ++j) {
             m[j][i] = *it++;

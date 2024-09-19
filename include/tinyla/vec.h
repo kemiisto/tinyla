@@ -12,15 +12,35 @@
 
 namespace tinyla
 {
+    enum class VecInit {
+        Uninitialized,
+        Zero
+    };
+
     template<typename T, typename... Types>
     concept is_all_same = (... && std::is_same<T, Types>::value);
 
     template<std::size_t N, typename T = float>
     requires(N >= 2)
-    struct Vec
+    class Vec
     {
     public:
-        constexpr Vec() = default;
+        constexpr explicit Vec(VecInit init) {
+            switch (init) {
+                case VecInit::Uninitialized:
+                    break;
+                case VecInit::Zero:
+                    setToZero();
+                    break;
+            }
+        }
+        constexpr Vec(std::initializer_list<T> values) {
+            assert(values.size() == N);
+            auto it = values.begin();
+            for (std::size_t i = 0; i < N; ++i) v[i] = *it++;
+        }
+
+        void setToZero();
 
         template<is_all_same<T>... Types>
         requires (sizeof...(Types) == N)
@@ -149,7 +169,7 @@ namespace tinyla
         // Unary minus (negation)
         constexpr friend inline Vec operator-(Vec vec) noexcept
         {
-            Vec result;
+            Vec result{tinyla::VecInit::Uninitialized};
             std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), std::negate<T>());
             return result;
         }
@@ -159,16 +179,27 @@ namespace tinyla
             return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
         }
 
+    private:
         std::array<T, N> v;
     };
 
     // deduction guide
     template<typename T, typename... U>
     Vec(T, U...) -> Vec<1 + sizeof...(U), T>;
-    
-    using Vec2 = Vec<2, float>;
-    using Vec3 = Vec<3, float>;
-    using Vec4 = Vec<4, float>;
+
+    using Vec2i = Vec<2, int>;
+    using Vec3i = Vec<3, int>;
+    using Vec4i = Vec<4, int>;
+
+    using Vec2f = Vec<2, float>;
+    using Vec3f = Vec<3, float>;
+    using Vec4f = Vec<4, float>;
+}
+
+template<std::size_t N, typename T = float>
+requires(N >= 2)
+void tinyla::Vec<N, T>::setToZero() {
+    fill(T{0});
 }
 
 // If the vector is already normalized or zero, then this function simply returns it back.
