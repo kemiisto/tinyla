@@ -35,7 +35,7 @@ namespace tinyla
         static Mat rotation(T angle, const Vec<N-1,T>& axis) requires (N == 4);
         static Mat perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
 
-        explicit Mat(MatInit init, Vec<N,T> v = {});
+        explicit Mat(MatInit init, Vec<N,T> v = Vec<N,T>{VecInit::Zero});
         Mat(std::initializer_list<T> values);
 
         constexpr T& operator()(std::size_t i, std::size_t j);
@@ -131,7 +131,7 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 void tinyla::Mat<N,T>::setToIdentity()
 {
-    auto i = tinyla::Vec<N,T>{};
+    auto i = tinyla::Vec<N,T>{VecInit::Uninitialized};
     i.fill(T{1});
     setToDiagonal(i);
 }
