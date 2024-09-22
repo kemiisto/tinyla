@@ -188,6 +188,29 @@ namespace tinyla
             };
         }
 
+        /**
+        * Returns the unit normal vector of a plane spanned by vectors b - a and c - a.
+        * Can be used to calculate a normal to a triangle with vertices a, b, c at point a.
+        */
+        static constexpr vec normal(vec a, vec b, vec c) noexcept requires(N == 3)
+        {
+            auto const ab = b - a;
+            auto const ac = c - a;
+            return cross(ab, ac).normalized();
+        }
+
+        /**
+        * Returns the unit normal vector of a plane spanned by vectors vs[1] - vs[0] and vs[2] - vs[0].
+        * Can be used to calculate a normal to a triangle with vertices vs[0], vs[1], vs[2] at point vs[0].
+        */
+        static constexpr vec normal(std::array<vec, 3> const& vs) noexcept requires(N == 3)
+        {
+            auto const& a = vs[0];
+            auto const& b = vs[1];
+            auto const& c = vs[2];
+            return normal(a, b, c);
+        }
+
     private:
         std::array<T, N> v;
     };
@@ -217,11 +240,8 @@ requires (N >= 2)
 tinyla::vec<N, T> tinyla::vec<N, T>::normalized() const noexcept
 {
     const float len = length();
-    if (close_to_zero(len - 1.0f) || close_to_zero(len)) {
-        return *this;
-    } else {
-        return *this / len;
-    }
+    if (close_to_zero(len - 1.0f) || close_to_zero(len)) return *this;
+    return *this / len;
 }
 
 template<std::size_t N, typename T>
@@ -229,9 +249,7 @@ requires (N >= 2)
 void tinyla::vec<N, T>::normalize() noexcept
 {
     const float len = length();
-    if (!close_to_zero(len - 1.0f) && !close_to_zero(len)) {
-        *this /= len;
-    }
+    if (!close_to_zero(len - 1.0f) && !close_to_zero(len)) *this /= len;
 }
 
 #endif // TINYLA_VEC_H
