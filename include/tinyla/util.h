@@ -9,13 +9,13 @@
 namespace tinyla
 {
     template<std::floating_point T>
-    constexpr inline T degreesToRadians(T degrees)
+    constexpr inline T deg_to_rad(T degrees)
     {
         return degrees * (std::numbers::pi_v<T> / 180);
     }
 
     template<std::floating_point T>
-    constexpr inline T radiansToDegrees(T radians)
+    constexpr inline T rad_to_deg(T radians)
     {
         return radians * (180 / std::numbers::pi_v<T>);
     }
@@ -23,11 +23,11 @@ namespace tinyla
     template<std::floating_point T>
     constexpr bool close(T n1, T n2)
     {
-        return (std::abs(n1 - n2) <= std::numeric_limits<T>::epsilon() * std::max(std::abs(n1), std::abs(n2)));
+        return std::abs(n1 - n2) <= std::numeric_limits<T>::epsilon() * std::max(std::abs(n1), std::abs(n2));
     }
 
     template<std::floating_point T>
-    constexpr bool closeToZero(T n)
+    constexpr bool close_to_zero(T n)
     {
         return std::abs(n) <= std::numeric_limits<T>::epsilon();
     }
