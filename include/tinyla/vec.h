@@ -17,15 +17,13 @@ namespace tinyla
         zero
     };
 
-    template<typename T, typename... Types>
-    concept is_all_same = (... && std::is_same_v<T, Types>);
-
     template<std::size_t N, typename T>
     requires(N >= 2)
     class vec
     {
     public:
-        constexpr explicit vec(vec_init init) {
+        constexpr explicit vec(vec_init init)
+        {
             switch (init) {
                 case vec_init::uninitialized:
                     break;
@@ -34,17 +32,15 @@ namespace tinyla
                     break;
             }
         }
-        constexpr vec(std::initializer_list<T> values) {
+
+        constexpr vec(std::initializer_list<T> values)
+        {
             assert(values.size() == N);
             auto it = values.begin();
             for (std::size_t i = 0; i < N; ++i) v[i] = *it++;
         }
 
         void set_to_zero();
-
-        template<is_all_same<T>... Types>
-        requires (sizeof...(Types) == N)
-        constexpr explicit vec(Types... args) : v {args...} {}
 
         constexpr void fill(const T& value) { v.fill(value); }
 
@@ -174,6 +170,14 @@ namespace tinyla
             return result;
         }
 
+        template<typename U>
+        constexpr vec<N,U> cast() const noexcept
+        {
+            auto result = vec<N,U>{vec_init::uninitialized};
+            for (auto i = std::size_t{0}; i < N; ++i) result[i] = static_cast<U>(v[i]);
+            return result;
+        }
+
         static constexpr T dot(vec vec1, vec vec2) noexcept
         {
             return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
@@ -214,10 +218,6 @@ namespace tinyla
     private:
         std::array<T, N> v;
     };
-
-    // deduction guide
-    template<typename T, typename... U>
-    vec(T, U...) -> vec<1 + sizeof...(U), T>;
 
     using vec2i = vec<2, int>;
     using vec3i = vec<3, int>;
