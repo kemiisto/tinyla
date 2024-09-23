@@ -219,6 +219,11 @@ namespace tinyla
         std::array<T, N> v;
     };
 
+    // deduction guide similar to std::array
+    // https://en.cppreference.com/w/cpp/container/array/deduction_guides
+    template<typename T, typename... U>
+    vec(T, U...) -> vec<1 + sizeof...(U), T>;
+
     using vec2i = vec<2, int>;
     using vec3i = vec<3, int>;
     using vec4i = vec<4, int>;

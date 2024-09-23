@@ -37,8 +37,8 @@ TEST_CASE("Vec2 size", "[Vec2]")
 
 TEST_CASE("Vec2 is constructed from initializer list", "[Vec2]")
 {
-    tinyla::vec2f tglVec {0.0f, 0.1f};
-    glm::vec2 glmVec {0.0f, 0.1f};
+    constexpr auto tglVec = tinyla::vec2f{0.0f, 0.1f};
+    constexpr auto glmVec = glm::vec2{0.0f, 0.1f};
     compare(tglVec, glmVec);
 }
 
