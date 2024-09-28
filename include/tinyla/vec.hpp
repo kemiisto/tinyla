@@ -1,7 +1,7 @@
 #ifndef TINYLA_VEC_H
 #define TINYLA_VEC_H
 
-#include <tinyla/util.h>
+#include <tinyla/util.hpp>
 #include <algorithm>
 #include <array>
 #include <cassert>

@@ -1,5 +1,5 @@
-#include <tinyla/mat.h>
-#include <tinyla/util.h>
+#include <tinyla/mat.hpp>
+#include <tinyla/util.hpp>
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #define GLM_FORCE_SIZE_T_LENGTH

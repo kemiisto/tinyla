@@ -1,4 +1,4 @@
-#include <tinyla/vec.h>
+#include <tinyla/vec.hpp>
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #define GLM_FORCE_SIZE_T_LENGTH

@@ -1,8 +1,8 @@
 #ifndef TINYLA_MATRIX_H
 #define TINYLA_MATRIX_H
 
-#include <tinyla/vec.h>
-#include <tinyla/util.h>
+#include <tinyla/vec.hpp>
+#include <tinyla/util.hpp>
 #include <array>
 #include <cassert>
 #include <cmath>
