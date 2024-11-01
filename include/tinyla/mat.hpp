@@ -23,14 +23,22 @@ namespace tinyla
 
     template<std::size_t N, typename T>
     requires(N >= 3)
-    mat<N,T> operator*(const mat<N,T>& a, const mat<N,T>& b);
+    mat<N, T> operator*(const mat<N,T>& a, const mat<N,T>& b);
+
+    template<std::size_t N, typename T>
+    requires(N >= 3)
+    vec<N,T> operator*(const vec<N,T>& v, const mat<N,T>& m);
+
+    template<std::size_t N, typename T>
+    requires(N >= 3)
+    vec<N,T> operator*(const mat<N,T>& m, const vec<N,T>& v);
 
     template<std::size_t N, typename T>
     requires(N >= 3)
     class mat
     {
     public:
-        static mat scaling(const vec<N - 1,T>& s) requires (N == 4);
+        static mat scaling(const vec<N-1,T>& s) requires (N == 4);
         static mat translation(const vec<N-1,T>& t) requires (N == 4);
         static mat rotation(T angle, const vec<N-1,T>& axis) requires (N == 4);
         static mat perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
@@ -80,13 +88,16 @@ namespace tinyla
         void post_rotate_z(T c, T s) requires (N == 4);
     };
 
+    using mat3i = mat<3,int>;
+    using mat4i = mat<4,int>;
+
     using mat3f = mat<3,float>;
     using mat4f = mat<4,float>;
 }
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-tinyla::mat<N,T>::mat(tinyla::mat_init init, tinyla::vec<N,T> v)
+tinyla::mat<N,T>::mat(mat_init init, vec<N,T> v)
 {
     switch (init) {
         case mat_init::uninitialized:
@@ -153,7 +164,7 @@ void tinyla::mat<N,T>::set_to_diagonal(vec<N,T> const& v)
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-void tinyla::mat<N,T>::pre_translate(const tinyla::vec<N - 1,T>& t) requires (N == 4)
+void tinyla::mat<N,T>::pre_translate(const vec<N - 1,T>& t) requires (N == 4)
 {
     /**
      * | 1  0  0  tx |   | m00   m01   m02   m03 |   | m00 + m30*tx   m01 + m31*tx   m02 + m32*tx   m03 + m33*tx |
@@ -182,7 +193,7 @@ void tinyla::mat<N,T>::pre_translate(const tinyla::vec<N - 1,T>& t) requires (N 
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-void tinyla::mat<N,T>::post_translate(const tinyla::vec<N - 1,T>& t) requires (N == 4)
+void tinyla::mat<N,T>::post_translate(const vec<N - 1,T>& t) requires (N == 4)
 {
     /**
      * | m00   m01   m02   m03 |   | 1  0  0  tx |   | m00   m01   m02   m00*tx + m01*ty + m02*tz + m03 |
@@ -377,7 +388,7 @@ void tinyla::mat<N,T>::post_rotate_z(T c, T s) requires (N == 4)
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-void tinyla::mat<N,T>::pre_rotate(T angle, const tinyla::vec<N - 1,T>& axis)  requires (N == 4)
+void tinyla::mat<N,T>::pre_rotate(T angle, const vec<N - 1,T>& axis)  requires (N == 4)
 {
     const T a = deg_to_rad(angle);
     const T c = std::cos(a);
@@ -407,7 +418,7 @@ void tinyla::mat<N,T>::pre_rotate(T angle, const tinyla::vec<N - 1,T>& axis)  re
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-void tinyla::mat<N,T>::post_rotate(T angle, const tinyla::vec<N - 1,T>& axis) requires (N == 4)
+void tinyla::mat<N,T>::post_rotate(T angle, const vec<N - 1,T>& axis) requires (N == 4)
 {
     const T a = deg_to_rad(angle);
     const T c = std::cos(a);
@@ -476,11 +487,11 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 tinyla::mat<N, T> tinyla::mat<N,T>::inverted() const requires (N == 4)
 {
-    tinyla::mat<N,T> inv(tinyla::mat_init::uninitialized);
+    mat<N,T> inv(mat_init::uninitialized);
 
     T det = det4(m);
     if (close_to_zero(det)) {
-        return tinyla::mat<N,T>(tinyla::mat_init::identity);
+        return tinyla::mat<N,T>(mat_init::identity);
     }
 
     det = T{1} / det;
@@ -524,7 +535,7 @@ constexpr const T* tinyla::mat<N,T>::data() const noexcept
 
 template<std::size_t N, typename T>
 requires (N >= 3)
-tinyla::mat<N, T> tinyla::mat<N, T>::scaling(tinyla::vec<N - 1, T> const& s) requires (N == 4)
+tinyla::mat<N, T> tinyla::mat<N, T>::scaling(vec<N - 1, T> const& s) requires (N == 4)
 {
     /**
      * | sx  0   0   0 |
@@ -532,7 +543,7 @@ tinyla::mat<N, T> tinyla::mat<N, T>::scaling(tinyla::vec<N - 1, T> const& s) req
      * | 0   0   sz  0 |
      * | 0   0   0   1 |
      */
-    tinyla::mat<N,T> mat(tinyla::mat_init::uninitialized);
+    mat<N,T> mat(mat_init::uninitialized);
 
     mat.m[0][0] = s.x();
     mat.m[0][1] = T{0};
@@ -567,7 +578,7 @@ tinyla::mat<N,T> tinyla::mat<N,T>::translation(const vec<N-1,T>& t) requires (N 
      * | 0  0  1  tz |
      * | 0  0  0  1  |
      */
-    tinyla::mat<N,T> mat(tinyla::mat_init::uninitialized);
+    mat<N,T> mat(mat_init::uninitialized);
 
     mat.m[0][0] = T{1};
     mat.m[0][1] = T{0};
@@ -614,7 +625,7 @@ tinyla::mat<N,T> tinyla::mat<N,T>::rotation(T angle, const vec<N-1,T>& axis) req
     }
     T ic = T{1} - c;
 
-    tinyla::mat<N,T> mat(tinyla::mat_init::uninitialized);
+    mat<N,T> mat(mat_init::uninitialized);
 
     mat.m[0][0] = x * x * ic + c;
     mat.m[0][1] = y * x * ic + z * s;
@@ -652,7 +663,7 @@ tinyla::mat<N,T> tinyla::mat<N,T>::perspective(T verticalAngle, T aspectRatio, T
     T cotan = std::cos(halfAngle) / sine;
     T clip = farPlane - nearPlane;
 
-    tinyla::mat<N,T> p(tinyla::mat_init::uninitialized);
+    mat<N,T> p(mat_init::uninitialized);
 
     p.m[0][0] = cotan / aspectRatio;
     p.m[0][1] = T{0};
@@ -679,7 +690,7 @@ tinyla::mat<N,T> tinyla::mat<N,T>::perspective(T verticalAngle, T aspectRatio, T
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-tinyla::mat<N,T> tinyla::mat<N,T>::operator*=(const tinyla::mat<N,T>& other)
+tinyla::mat<N,T> tinyla::mat<N,T>::operator*=(const mat<N,T>& other)
 {
     const auto o = other; // prevent aliasing when &o == this
     *this = *this * o;
@@ -688,7 +699,7 @@ tinyla::mat<N,T> tinyla::mat<N,T>::operator*=(const tinyla::mat<N,T>& other)
 
 template<std::size_t N, typename T>
 requires(N >= 3)
-bool tinyla::mat<N,T>::close_to(tinyla::mat<N,T> const& other)
+bool tinyla::mat<N,T>::close_to(mat<N,T> const& other)
 {
     // A simple iterative algorithm but for column-major order.
     for (size_t i = 0; i < N; ++i) {
@@ -705,16 +716,37 @@ template<std::size_t N, typename T>
 requires(N >= 3)
 tinyla::mat<N,T> tinyla::operator*(const mat<N,T>& a, const mat<N,T>& b)
 {
-    auto c = tinyla::mat<N,T>(tinyla::mat_init::uninitialized);
+    auto c = tinyla::mat<N,T>{mat_init::uninitialized};
     for (size_t i = 0; i < N; ++i) {
         for (size_t j = 0; j < N; ++j) {
             c.m[i][j] = T{0};
-            for (size_t k = 0; k < 4; ++k) {
+            for (size_t k = 0; k < N; ++k) {
                 c.m[i][j] += a.m[k][j] * b.m[i][k];
             }
         }
     }
     return c;
+}
+
+template<std::size_t N, typename T>
+requires(N >= 3)
+tinyla::vec<N,T> tinyla::operator*(const vec<N,T>& v, const mat<N,T>& m)
+{
+
+}
+
+template<std::size_t N, typename T>
+requires(N >= 3)
+tinyla::vec<N,T> tinyla::operator*(const mat<N,T>& m, const vec<N,T>& v)
+{
+    auto mv = tinyla::vec<N,T>{vec_init::uninitialized};
+    for (size_t i = 0; i < N; ++i) {
+        mv[i] = T{0};
+        for (size_t j = 0; j < N; ++j) {
+            mv[i] += m(j, i) * v[j];
+        }
+    }
+    return mv;
 }
 
 #endif // TINYLA_MATRIX_H

@@ -3,32 +3,13 @@
 #include <catch2/catch_all.hpp>
 #define GLM_FORCE_SIZE_T_LENGTH
 #include <glm/glm.hpp>
+#include "compare.hpp"
 
 constexpr auto glmVec4A = glm::vec4{1.0f, 2.0f, 3.0f, 4.0f};
 constexpr auto glmVec4B = glm::vec4{4.0f, 5.0f, 6.0f, 7.0f};
 
 constexpr auto tglVec4A = tinyla::vec4f{1.0f, 2.0f, 3.0f, 4.0f};
 constexpr auto tglVec4B = tinyla::vec4f{4.0f, 5.0f, 6.0f, 7.0f};
-
-template<std::size_t N, typename T>
-requires(std::is_floating_point_v<T>)
-void compare(const tinyla::vec<N,T>& tglVec1, const tinyla::vec<N,T>& tglVec2)
-{
-    for (std::size_t i = 0; i < N; ++i) {
-        CAPTURE(i);
-        REQUIRE(tglVec1[i] == Catch::Approx(tglVec1[i]));
-    }
-}
-
-template<std::size_t N, typename T>
-requires(std::is_floating_point_v<T>)
-void compare(const tinyla::vec<N,T>& tglVec, const glm::vec<N,T>& glmVec)
-{
-    for (std::size_t i = 0; i < N; ++i) {
-        CAPTURE(i);
-        REQUIRE(tglVec[i] == Catch::Approx(glmVec[i]));
-    }
-}
 
 TEST_CASE("Vec2 size", "[Vec2]")
 {
@@ -272,6 +253,16 @@ TEST_CASE("Vecn")
     REQUIRE(v[3] == 3);
     REQUIRE(v[4] == 4);
     REQUIRE(v[5] == 5);
+}
+
+TEST_CASE("Vec4 from Vec3")
+{
+    auto v3 = tinyla::vec3i{0, 1, 2};
+    auto v4 = tinyla::vec4i{v3, 3};
+    REQUIRE(v4[0] == 0);
+    REQUIRE(v4[1] == 1);
+    REQUIRE(v4[2] == 2);
+    REQUIRE(v4[3] == 3);
 }
 
 int main(int argc, const char* argv[])

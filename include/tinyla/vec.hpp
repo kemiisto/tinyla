@@ -19,8 +19,7 @@ namespace tinyla
 
     template<std::size_t N, typename T>
     requires(N >= 2)
-    class vec
-    {
+    class vec {
     public:
         constexpr explicit vec(vec_init init)
         {
@@ -38,6 +37,21 @@ namespace tinyla
             assert(values.size() == N);
             auto it = values.begin();
             for (std::size_t i = 0; i < N; ++i) v[i] = *it++;
+        }
+
+        template<std::size_t M>
+        constexpr vec(const vec<M, T>& smaller_vec, std::initializer_list<T> values) requires(M < N)
+        {
+            assert(values.size() == N - M);
+            for (std::size_t i = 0; i < M; ++i) v[i] = smaller_vec[i];
+            auto it = values.begin();
+            for (std::size_t i = M; i < N; ++i) v[i] = *it++;
+        }
+
+        template<std::size_t M, typename...Ts>
+        constexpr vec(const vec<M, T>& smaller_vec, Ts... vs) requires(M < N && sizeof...(Ts) == N - M)
+            : vec(smaller_vec, std::initializer_list<T>{ vs... })
+        {
         }
 
         void set_to_zero();

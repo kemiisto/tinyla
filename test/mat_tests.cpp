@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <iostream>
+#include "compare.hpp"
 
 const auto zero = tinyla::mat4f {
     0.0f, 0.0f, 0.0f, 0.0f,
@@ -59,7 +60,7 @@ TEST_CASE("Mat3 is constructed from initializer list", "[Mat3]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
+TEST_CASE("mat4 is constructed from initializer list", "[mat4]")
 {
     tinyla::mat4f tglMatrix {
         0.0f, 0.1f, 0.2f, 0.3f,
@@ -79,14 +80,14 @@ TEST_CASE("Mat4 is constructed from initializer list", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 is constructed as identity matrix", "[Mat4]")
+TEST_CASE("mat4 is constructed as identity matrix", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
     auto glmMatrix = glm::mat4(1.0f);
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 scaling", "[Mat4]")
+TEST_CASE("mat4 scaling", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f::scaling(tinyla::vec3f{2.0f, 3.0f, 4.0f});
 
@@ -96,7 +97,7 @@ TEST_CASE("Mat4 scaling", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 preScale", "[Mat4]")
+TEST_CASE("mat4 preScale", "[mat4]")
 {
     auto tglMatrix = unique;
     tglMatrix.pre_scale(tinyla::vec3f{2.0f, 3.0f, 4.0f});
@@ -108,7 +109,7 @@ TEST_CASE("Mat4 preScale", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 postScale", "[Mat4]")
+TEST_CASE("mat4 postScale", "[mat4]")
 {
     auto tglMatrix = unique;
     tglMatrix.post_scale(tinyla::vec3f{2.0f, 3.0f, 4.0f});
@@ -119,7 +120,7 @@ TEST_CASE("Mat4 postScale", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 scaling benchmark", "[Mat4]")
+TEST_CASE("mat4 scaling benchmark", "[mat4]")
 {
     BENCHMARK("preScale") {
         auto m = unique;
@@ -135,7 +136,7 @@ TEST_CASE("Mat4 scaling benchmark", "[Mat4]")
     };
 }
 
-TEST_CASE("Mat4 translation", "[Mat4]")
+TEST_CASE("mat4 translation", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f::translation(tinyla::vec3f{1.0f, 2.0f, 3.0f});
 
@@ -145,7 +146,7 @@ TEST_CASE("Mat4 translation", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 preTranslate", "[Mat4]")
+TEST_CASE("mat4 preTranslate", "[mat4]")
 {
     auto tglMatrix = unique;
     tglMatrix.pre_translate(tinyla::vec3f{1.0f, 2.0f, 3.0f});
@@ -157,7 +158,7 @@ TEST_CASE("Mat4 preTranslate", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 translation benchmark", "[Mat4]")
+TEST_CASE("mat4 translation benchmark", "[mat4]")
 {
     BENCHMARK("preTranslate") {
         auto m = unique;
@@ -173,7 +174,7 @@ TEST_CASE("Mat4 translation benchmark", "[Mat4]")
     };
 }
 
-TEST_CASE("Mat4 postTranslate", "[Mat4]")
+TEST_CASE("mat4 postTranslate", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
     tglMatrix.post_translate(tinyla::vec3f{1.0f, 2.0f, 3.0f});
@@ -184,7 +185,7 @@ TEST_CASE("Mat4 postTranslate", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 preRotate around x-axis", "[Mat4]")
+TEST_CASE("mat4 preRotate around x-axis", "[mat4]")
 {
     auto tglMatrix = unique;
     tglMatrix.pre_rotate(45.0f, {1.0f, 0.0f, 0.0f});
@@ -196,7 +197,7 @@ TEST_CASE("Mat4 preRotate around x-axis", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 postRotate around x-axis", "[Mat4]")
+TEST_CASE("mat4 postRotate around x-axis", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
     tglMatrix.post_rotate(45.0f, tinyla::vec3f{1.0f, 0.0f, 0.0f});
@@ -207,7 +208,7 @@ TEST_CASE("Mat4 postRotate around x-axis", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 preRotate around y-axis", "[Mat4]")
+TEST_CASE("mat4 preRotate around y-axis", "[mat4]")
 {
     auto tglMatrix = unique;
     tglMatrix.pre_rotate(45.0f, {0.0f, 1.0f, 0.0f});
@@ -219,7 +220,7 @@ TEST_CASE("Mat4 preRotate around y-axis", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 postRotate around y-axis", "[Mat4]")
+TEST_CASE("mat4 postRotate around y-axis", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
     tglMatrix.post_rotate(45.0f, {0.0f, 1.0f, 0.0f});
@@ -230,7 +231,7 @@ TEST_CASE("Mat4 postRotate around y-axis", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 preRotate around z-axis", "[Mat4]")
+TEST_CASE("mat4 preRotate around z-axis", "[mat4]")
 {
     auto tglMatrix = unique;
     tglMatrix.pre_rotate(45.0f, {0.0f, 0.0f, 1.0f});
@@ -242,7 +243,7 @@ TEST_CASE("Mat4 preRotate around z-axis", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 postRotate around z-axis", "[Mat4]")
+TEST_CASE("mat4 postRotate around z-axis", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
     tglMatrix.post_rotate(45.0f, {0.0f, 0.0f, 1.0f});
@@ -253,7 +254,7 @@ TEST_CASE("Mat4 postRotate around z-axis", "[Mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("operator*=", "[Mat4]")
+TEST_CASE("operator*=", "[mat4]")
 {
     auto m = zero;
     m *= zero;
@@ -276,7 +277,7 @@ TEST_CASE("operator*=", "[Mat4]")
     REQUIRE(m.close_to(unique));
 }
 
-TEST_CASE("operator*", "[Mat4]")
+TEST_CASE("operator*", "[mat4]")
 {
     auto m = zero * zero;
     REQUIRE(m.close_to(zero));
@@ -294,7 +295,7 @@ TEST_CASE("operator*", "[Mat4]")
     REQUIRE(m.close_to(unique));
 }
 
-TEST_CASE("Mat4 data", "[Mat4]")
+TEST_CASE("mat4 data", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
     tglMatrix.post_translate({1.0f, 2.0f, 3.0f});
@@ -310,14 +311,14 @@ TEST_CASE("Mat4 data", "[Mat4]")
     }
 }
 
-TEST_CASE("Mat4 perspective", "[Mat4]")
+TEST_CASE("mat4 perspective", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f::perspective(60.0f, 1.0f, 0.1f, 1000.0f);
     auto glmMatrix = glm::perspective(tinyla::deg_to_rad(60.0f), 1.0f, 0.1f, 1000.0f);
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("Mat4 determinant", "[Mat4]")
+TEST_CASE("mat4 determinant", "[mat4]")
 {
     {
         auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
@@ -331,7 +332,7 @@ TEST_CASE("Mat4 determinant", "[Mat4]")
     }
 }
 
-TEST_CASE("Mat4 inverted", "[Mat4]")
+TEST_CASE("mat4 inverted", "[mat4]")
 {
     {
         auto tglMatrix = tinyla::mat4f(tinyla::mat_init::identity);
@@ -345,6 +346,19 @@ TEST_CASE("Mat4 inverted", "[Mat4]")
         glmMatrix = glm::inverse(glmMatrix);
         compare(tglMatrix.inverted(), glm::inverse(glmMatrix));
     }
+}
+
+TEST_CASE("mat4 * vec4", "[mat4]")
+{
+    const auto m = tinyla::mat4i {
+         1,  2,  3,  4,
+         5,  6,  7,  8,
+         9, 10, 11, 12,
+        13, 14, 15, 16
+    };
+    const auto v = tinyla::vec4i {1, 2, 3, 4};
+    const auto mv = m * v;
+    compare(mv, tinyla::vec4i{30, 70, 110, 150});
 }
 
 int main(int argc, const char* argv[])
