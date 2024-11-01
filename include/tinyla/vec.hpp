@@ -247,9 +247,10 @@ namespace tinyla
     using vec4f = vec<4, float>;
 }
 
-template<std::size_t N, typename T = float>
+template<std::size_t N, typename T>
 requires(N >= 2)
-void tinyla::vec<N, T>::set_to_zero() {
+void tinyla::vec<N, T>::set_to_zero()
+{
     fill(T{0});
 }
 

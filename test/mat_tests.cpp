@@ -120,22 +120,6 @@ TEST_CASE("mat4 postScale", "[mat4]")
     compare(tglMatrix, glmMatrix);
 }
 
-TEST_CASE("mat4 scaling benchmark", "[mat4]")
-{
-    BENCHMARK("preScale") {
-        auto m = unique;
-        m.pre_scale(tinyla::vec3f{2.0f, 3.0f, 4.0f});
-        return m;
-    };
-
-    BENCHMARK("preScale by matrix multiplication") {
-        auto t = tinyla::mat4f::scaling(tinyla::vec3f{2.0f, 3.0f, 4.0f});
-        auto m = unique;
-        m = t * m;
-        return m;
-    };
-}
-
 TEST_CASE("mat4 translation", "[mat4]")
 {
     auto tglMatrix = tinyla::mat4f::translation(tinyla::vec3f{1.0f, 2.0f, 3.0f});
@@ -156,22 +140,6 @@ TEST_CASE("mat4 preTranslate", "[mat4]")
     auto glmMatrix = translationMatrix * glm::make_mat4(unique.data());
 
     compare(tglMatrix, glmMatrix);
-}
-
-TEST_CASE("mat4 translation benchmark", "[mat4]")
-{
-    BENCHMARK("preTranslate") {
-        auto m = unique;
-        m.pre_translate(tinyla::vec3f{1.0f, 2.0f, 3.0f});
-        return m;
-    };
-
-    BENCHMARK("preTranslate by matrix multiplication") {
-        auto t = tinyla::mat4f::translation(tinyla::vec3f{1.0f, 2.0f, 3.0f});
-        auto m = unique;
-        m = t * m;
-        return m;
-    };
 }
 
 TEST_CASE("mat4 postTranslate", "[mat4]")
