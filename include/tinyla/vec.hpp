@@ -12,6 +12,10 @@
 
 namespace tinyla
 {
+    template<std::size_t N, typename T>
+    requires(N >= 2)
+    class mat;
+
     enum class vec_init {
         uninitialized,
         zero
@@ -54,7 +58,7 @@ namespace tinyla
         {
         }
 
-        void set_to_zero();
+        constexpr void set_to_zero();
 
         constexpr void fill(const T& value) { v.fill(value); }
 
@@ -229,6 +233,7 @@ namespace tinyla
             return normal(a, b, c);
         }
 
+        friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
     private:
         std::array<T, N> v;
     };
@@ -249,7 +254,7 @@ namespace tinyla
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-void tinyla::vec<N, T>::set_to_zero()
+constexpr void tinyla::vec<N, T>::set_to_zero()
 {
     fill(T{0});
 }
