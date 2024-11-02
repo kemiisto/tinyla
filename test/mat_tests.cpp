@@ -33,7 +33,7 @@ void compare(const tinyla::mat<N,T>& m, const std::array<std::array<T,N>,N>& a)
         for (std::size_t j = 0; j < N; ++j) {
             CAPTURE(i);
             CAPTURE(j);
-            REQUIRE(m[i, j] == Catch::Approx(a[i][j]));
+            REQUIRE(m(i, j) == Catch::Approx(a[i][j]));
         }
     }
 }
@@ -45,7 +45,7 @@ void compare(const tinyla::mat<N,T>& m1, const tinyla::mat<N,T>& m2)
         for (std::size_t j = 0; j < N; ++j) {
             CAPTURE(i);
             CAPTURE(j);
-            REQUIRE(m1[i, j] == Catch::Approx(m2[i, j]));
+            REQUIRE(m1(i, j) == Catch::Approx(m2(i, j)));
         }
     }
 }

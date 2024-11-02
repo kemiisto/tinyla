@@ -41,8 +41,8 @@ namespace tinyla
         explicit mat(mat_init init, vec<N,T> v = vec<N,T>{vec_init::zero});
         mat(std::initializer_list<T> values);
 
-        constexpr T& operator[](std::size_t row, std::size_t column);
-        constexpr T operator[](std::size_t row, std::size_t column) const;
+        constexpr T& operator()(std::size_t row, std::size_t column);
+        constexpr T operator()(std::size_t row, std::size_t column) const;
 
         mat operator*=(const mat& o);
 
@@ -124,14 +124,14 @@ tinyla::mat<N,T>::mat(std::initializer_list<T> values)
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-constexpr T& tinyla::mat<N,T>::operator[](std::size_t row, std::size_t column)
+constexpr T& tinyla::mat<N,T>::operator()(std::size_t row, std::size_t column)
 {
     return m[column][row];
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-constexpr T tinyla::mat<N,T>::operator[](std::size_t row, std::size_t column) const
+constexpr T tinyla::mat<N,T>::operator()(std::size_t row, std::size_t column) const
 {
     return m[column][row];
 }
