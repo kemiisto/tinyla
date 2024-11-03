@@ -454,8 +454,8 @@ static inline T det2(const T m[4][4], int col0, int col1, int row0, int row1)
 // Calculate the determinant of a 3x3 sub-matrix.
 template<typename T>
 static inline T det3(const T m[4][4],
-                     int col0, int col1, int col2,
-                     int row0, int row1, int row2)
+     int col0, int col1, int col2,
+     int row0, int row1, int row2)
 {
     return m[col0][row0] * det2(m, col1, col2, row1, row2)
         - m[col1][row0] * det2(m, col0, col2, row1, row2)
