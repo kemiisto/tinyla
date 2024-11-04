@@ -5,6 +5,8 @@
 #include "compare.hpp"
 #include <array>
 
+using namespace tinyla::literals;
+
 const auto zero = tinyla::mat4f {
     0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f,
@@ -185,7 +187,7 @@ TEST_CASE("mat4 post_translate", "[mat4]")
 TEST_CASE("mat4 pre_rotate around x-axis", "[mat4]")
 {
     auto m = unique;
-    m.pre_rotate(45.0f, {1.0f, 0.0f, 0.0f});
+    m.pre_rotate(45.0_degf, {1.0f, 0.0f, 0.0f});
 
     constexpr auto a = std::array<std::array<float, 4>, 4> {
          1.000000f,  2.000000f,  3.000000f,  4.000000f,
@@ -200,7 +202,7 @@ TEST_CASE("mat4 pre_rotate around x-axis", "[mat4]")
 TEST_CASE("mat4 post_rotate around x-axis", "[mat4]")
 {
     auto m = unique;
-    m.post_rotate(45.0f, tinyla::vec3f{1.0f, 0.0f, 0.0f});
+    m.post_rotate(45.0_degf, tinyla::vec3f{1.0f, 0.0f, 0.0f});
 
     constexpr auto a = std::array<std::array<float, 4>, 4> {
          1.000000f,  3.535534f, 0.707107f,  4.000000f,
@@ -215,7 +217,7 @@ TEST_CASE("mat4 post_rotate around x-axis", "[mat4]")
 TEST_CASE("mat4 pre_rotate around y-axis", "[mat4]")
 {
     auto m = unique;
-    m.pre_rotate(45.0f, {0.0f, 1.0f, 0.0f});
+    m.pre_rotate(45.0_degf, {0.0f, 1.0f, 0.0f});
 
     constexpr auto a = std::array<std::array<float, 4>, 4> {
          7.071067f,  8.485281f,  9.899494f, 11.313708f,
@@ -230,7 +232,7 @@ TEST_CASE("mat4 pre_rotate around y-axis", "[mat4]")
 TEST_CASE("mat4 post_rotate around y-axis", "[mat4]")
 {
     auto m = unique;
-    m.post_rotate(45.0f, {0.0f, 1.0f, 0.0f});
+    m.post_rotate(45.0_degf, {0.0f, 1.0f, 0.0f});
 
     constexpr auto a = std::array<std::array<float, 4>, 4> {
         -1.414213f,  2.000000f,  2.828427f,  4.000000f,
@@ -245,7 +247,7 @@ TEST_CASE("mat4 post_rotate around y-axis", "[mat4]")
 TEST_CASE("mat4 pre_rotate around z-axis", "[mat4]")
 {
     auto m = unique;
-    m.pre_rotate(45.0f, {0.0f, 0.0f, 1.0f});
+    m.pre_rotate(45.0_degf, {0.0f, 0.0f, 1.0f});
 
     constexpr auto a = std::array<std::array<float, 4>, 4> {
         -2.828427f, -2.828427f, -2.828427f, -2.828427f,
@@ -260,7 +262,7 @@ TEST_CASE("mat4 pre_rotate around z-axis", "[mat4]")
 TEST_CASE("mat4 post_rotate around z-axis", "[mat4]")
 {
     auto m = unique;
-    m.post_rotate(45.0f, {0.0f, 0.0f, 1.0f});
+    m.post_rotate(45.0_degf, {0.0f, 0.0f, 1.0f});
 
     constexpr auto a = std::array<std::array<float, 4>, 4> {
          2.121320f, 0.707107f,  3.000000f,  4.000000f,
@@ -315,7 +317,7 @@ TEST_CASE("operator*", "[mat4]")
 
 TEST_CASE("mat4 perspective", "[mat4]")
 {
-    const auto m = tinyla::mat4f::perspective(60.0f, 1.0f, 0.1f, 1000.0f);
+    const auto m = tinyla::mat4f::perspective(tinyla::angle<float>::from_degrees(60.0f), 1.0f, 0.1f, 1000.0f);
     constexpr auto a = std::array<std::array<float, 4>, 4> {
         1.732051f, 0.000000f,  0.000000f,  0.000000f,
         0.000000f, 1.732051f,  0.000000f,  0.000000f,
@@ -374,7 +376,7 @@ TEST_CASE("mat4 determinant", "[mat4]")
         REQUIRE(m.determinant() == Catch::Approx(0.0f));
     }
     {
-        auto m = tinyla::mat4f::perspective(60.0f, 1.0f, 0.1f, 1000.0f);
+        auto m = tinyla::mat4f::perspective(60.0_degf, 1.0f, 0.1f, 1000.0f);
         REQUIRE(m.determinant() == Catch::Approx(-0.60006f));
     }
 }
@@ -390,7 +392,7 @@ TEST_CASE("mat4 inverted", "[mat4]")
         compare(m.inverted(), tinyla::mat4f{tinyla::mat_init::identity});
     }
     {
-        const auto m = tinyla::mat4f::perspective(60.0f, 1.0f, 0.1f, 1000.0f);
+        const auto m = tinyla::mat4f::perspective(60.0_degf, 1.0f, 0.1f, 1000.0f);
         constexpr auto a = std::array<std::array<float, 4>, 4> {
              0.577350f,  0.000000f, -0.000000f,  0.000000f,
              0.000000f,  0.577350f,  0.000000f, -0.000000f,

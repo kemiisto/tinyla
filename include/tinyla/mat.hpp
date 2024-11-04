@@ -1,6 +1,7 @@
 #ifndef TINYLA_MATRIX_H
 #define TINYLA_MATRIX_H
 
+#include <tinyla/angle.hpp>
 #include <tinyla/vec.hpp>
 #include <tinyla/util.hpp>
 #include <array>
@@ -35,8 +36,8 @@ namespace tinyla
     public:
         static mat scaling(const vec<N-1,T>& s) requires (N == 4);
         static mat translation(const vec<N-1,T>& t) requires (N == 4);
-        static mat rotation(T angle, const vec<N-1,T>& axis) requires (N == 4);
-        static mat perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
+        static mat rotation(const angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4);
+        static mat perspective(const angle<T>& verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
 
         explicit mat(mat_init init, vec<N,T> v = vec<N,T>{vec_init::zero});
         mat(std::initializer_list<T> values);
@@ -58,8 +59,8 @@ namespace tinyla
         void pre_translate(const vec<N-1,T>& t) requires (N == 4);
         void post_translate(const vec<N-1,T>& t) requires (N == 4);
 
-        void pre_rotate(T angle, const vec<N-1,T>& axis) requires (N == 4);
-        void post_rotate(T angle, const vec<N-1,T>& axis) requires (N == 4);
+        void pre_rotate(const angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4);
+        void post_rotate(const angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4);
 
         T determinant() const requires (N == 4);
         mat inverted() const requires (N == 4);
@@ -68,6 +69,8 @@ namespace tinyla
         constexpr const T* data() const noexcept;
 
         bool close_to(const mat& other);
+
+        vec<N, T> project(const vec<N, T>& v) const requires (N == 4);
 
         friend mat<N,T> operator* <>(const mat<N,T>& a, const mat<N,T>& b);
         friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
@@ -386,9 +389,9 @@ void tinyla::mat<N,T>::post_rotate_z(T c, T s) requires (N == 4)
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-void tinyla::mat<N,T>::pre_rotate(T angle, const vec<N-1,T>& axis)  requires (N == 4)
+void tinyla::mat<N,T>::pre_rotate(const angle<T>& angle, const vec<N-1,T>& axis)  requires (N == 4)
 {
-    const T a = deg_to_rad(angle);
+    const T a = angle.radians();
     const T c = std::cos(a);
     const T s = std::sin(a);
 
@@ -416,9 +419,9 @@ void tinyla::mat<N,T>::pre_rotate(T angle, const vec<N-1,T>& axis)  requires (N 
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-void tinyla::mat<N,T>::post_rotate(T angle, const vec<N-1,T>& axis) requires (N == 4)
+void tinyla::mat<N,T>::post_rotate(const angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4)
 {
-    const T a = deg_to_rad(angle);
+    const T a = angle.radians();
     const T c = std::cos(a);
     const T s = std::sin(a);
 
@@ -604,9 +607,9 @@ tinyla::mat<N,T> tinyla::mat<N,T>::translation(const vec<N-1,T>& t) requires (N 
 
 template<std::size_t N, typename T>
 requires (N >= 2)
-tinyla::mat<N,T> tinyla::mat<N,T>::rotation(T angle, const vec<N-1,T>& axis) requires (N == 4)
+tinyla::mat<N,T> tinyla::mat<N,T>::rotation(const tinyla::angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4)
 {
-    const T a = deg_to_rad(angle);
+    const T a = angle.radians();
     const T c = std::cos(a);
     const T s = std::sin(a);
 
@@ -650,12 +653,12 @@ tinyla::mat<N,T> tinyla::mat<N,T>::rotation(T angle, const vec<N-1,T>& axis) req
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-tinyla::mat<N,T> tinyla::mat<N,T>::perspective(T verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4)
+tinyla::mat<N,T> tinyla::mat<N,T>::perspective(const tinyla::angle<T>& verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4)
 {
     assert(nearPlane != farPlane);
     assert(aspectRatio != T{0});
 
-    const T halfAngle = deg_to_rad(verticalAngle / 2);
+    const T halfAngle = verticalAngle.radians() / 2;
     const T sine = std::sin(halfAngle);
     assert(sine != T{0});
     T cotan = std::cos(halfAngle) / sine;
@@ -708,6 +711,17 @@ bool tinyla::mat<N,T>::close_to(mat<N,T> const& other)
         }
     }
     return true;
+}
+
+template<std::size_t N, typename T>
+requires(N >= 2)
+tinyla::vec<N, T> tinyla::mat<N,T>::project(const vec<N, T>& v) const requires (N == 4)
+{
+    auto result =  *this * v;
+    if (result.w() != T{0}) {
+        result /= result.w();
+    }
+    return result;
 }
 
 template<std::size_t N, typename T>
