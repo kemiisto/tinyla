@@ -14,6 +14,7 @@ namespace tinyla
 {
     enum class mat_init {
         uninitialized,
+        zero,
         identity,
         diagonal
     };
@@ -37,7 +38,6 @@ namespace tinyla
         static mat scaling(const vec<N-1,T>& s) requires (N == 4);
         static mat translation(const vec<N-1,T>& t) requires (N == 4);
         static mat rotation(const angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4);
-        static mat perspective(const angle<T>& verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4);
 
         explicit mat(mat_init init, vec<N,T> v = vec<N,T>{vec_init::zero});
         mat(std::initializer_list<T> values);
@@ -47,6 +47,7 @@ namespace tinyla
 
         mat operator*=(const mat& o);
 
+        void set_to_zero();
         void set_to_identity();
         void set_to_diagonal(vec<N,T> const& v);
 
@@ -70,12 +71,10 @@ namespace tinyla
 
         bool close_to(const mat& other);
 
-        vec<N, T> project(const vec<N, T>& v) const requires (N == 4);
-
         friend mat<N,T> operator* <>(const mat<N,T>& a, const mat<N,T>& b);
         friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
     private:
-        T m[N][N]{};
+        T m[N][N];
 
         void pre_rotate_x(T c, T s) requires (N == 4);
         void post_rotate_x(T c, T s) requires (N == 4);
@@ -102,6 +101,9 @@ tinyla::mat<N,T>::mat(mat_init init, vec<N,T> v)
 {
     switch (init) {
         case mat_init::uninitialized:
+            break;
+        case mat_init::zero:
+            set_to_zero();
             break;
         case mat_init::identity:
             set_to_identity();
@@ -141,6 +143,13 @@ constexpr T tinyla::mat<N,T>::operator()(std::size_t row, std::size_t column) co
 
 template<std::size_t N, typename T>
 requires(N >= 2)
+void tinyla::mat<N,T>::set_to_zero()
+{
+    std::fill(&m[0][0], &m[0][0] + N * N, T{0});
+}
+
+template<std::size_t N, typename T>
+requires(N >= 2)
 void tinyla::mat<N,T>::set_to_identity()
 {
     auto i = tinyla::vec<N,T>{vec_init::uninitialized};
@@ -152,14 +161,9 @@ template<std::size_t N, typename T>
 requires(N >= 2)
 void tinyla::mat<N,T>::set_to_diagonal(vec<N,T> const& v)
 {
+    set_to_zero();
     for (size_t i = 0; i < N; ++i) {
-        for (size_t j = 0; j < N; ++j) {
-            if (i == j) {
-                m[i][j] = v[i];
-            } else {
-                m[i][j] = T{0};
-            }
-        }
+        m[i][i] = v[i];
     }
 }
 
@@ -607,7 +611,7 @@ tinyla::mat<N,T> tinyla::mat<N,T>::translation(const vec<N-1,T>& t) requires (N 
 
 template<std::size_t N, typename T>
 requires (N >= 2)
-tinyla::mat<N,T> tinyla::mat<N,T>::rotation(const tinyla::angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4)
+tinyla::mat<N,T> tinyla::mat<N,T>::rotation(const angle<T>& angle, const vec<N-1,T>& axis) requires (N == 4)
 {
     const T a = angle.radians();
     const T c = std::cos(a);
@@ -653,44 +657,6 @@ tinyla::mat<N,T> tinyla::mat<N,T>::rotation(const tinyla::angle<T>& angle, const
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-tinyla::mat<N,T> tinyla::mat<N,T>::perspective(const tinyla::angle<T>& verticalAngle, T aspectRatio, T nearPlane, T farPlane) requires(N == 4)
-{
-    assert(nearPlane != farPlane);
-    assert(aspectRatio != T{0});
-
-    const T halfAngle = verticalAngle.radians() / 2;
-    const T sine = std::sin(halfAngle);
-    assert(sine != T{0});
-    T cotan = std::cos(halfAngle) / sine;
-    T clip = farPlane - nearPlane;
-
-    mat<N,T> p(mat_init::uninitialized);
-
-    p.m[0][0] = cotan / aspectRatio;
-    p.m[0][1] = T{0};
-    p.m[0][2] = T{0};
-    p.m[0][3] = T{0};
-
-    p.m[1][0] = T{0};
-    p.m[1][1] = cotan;
-    p.m[1][2] = T{0};
-    p.m[1][3] = T{0};
-
-    p.m[2][0] = T{0};
-    p.m[2][1] = T{0};
-    p.m[2][2] = -(nearPlane + farPlane) / clip;
-    p.m[2][3] = T{-1};
-
-    p.m[3][0] = T{0};
-    p.m[3][1] = T{0};
-    p.m[3][2] = -(2 * nearPlane * farPlane) / clip;
-    p.m[3][3] = T{0};
-
-    return p;
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
 tinyla::mat<N,T> tinyla::mat<N,T>::operator*=(const mat<N,T>& other)
 {
     const auto o = other; // prevent aliasing when &o == this
@@ -711,17 +677,6 @@ bool tinyla::mat<N,T>::close_to(mat<N,T> const& other)
         }
     }
     return true;
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-tinyla::vec<N, T> tinyla::mat<N,T>::project(const vec<N, T>& v) const requires (N == 4)
-{
-    auto result =  *this * v;
-    if (result.w() != T{0}) {
-        result /= result.w();
-    }
-    return result;
 }
 
 template<std::size_t N, typename T>

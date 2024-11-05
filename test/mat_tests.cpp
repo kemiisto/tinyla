@@ -28,30 +28,6 @@ const auto identity = tinyla::mat4f {
     0.0f, 0.0f, 0.0f, 1.0f
 };
 
-template<std::size_t N, typename T>
-void compare(const tinyla::mat<N,T>& m, const std::array<std::array<T,N>,N>& a)
-{
-    for (std::size_t i = 0; i < N; ++i) {
-        for (std::size_t j = 0; j < N; ++j) {
-            CAPTURE(i);
-            CAPTURE(j);
-            REQUIRE(m(i, j) == Catch::Approx(a[i][j]));
-        }
-    }
-}
-
-template<std::size_t N, typename T>
-void compare(const tinyla::mat<N,T>& m1, const tinyla::mat<N,T>& m2)
-{
-    for (std::size_t i = 0; i < N; ++i) {
-        for (std::size_t j = 0; j < N; ++j) {
-            CAPTURE(i);
-            CAPTURE(j);
-            REQUIRE(m1(i, j) == Catch::Approx(m2(i, j)));
-        }
-    }
-}
-
 TEST_CASE("Mat3 is constructed from initializer list", "[Mat3]")
 {
     const auto m = tinyla::mat3f {
@@ -315,18 +291,6 @@ TEST_CASE("operator*", "[mat4]")
     REQUIRE(m.close_to(unique));
 }
 
-TEST_CASE("mat4 perspective", "[mat4]")
-{
-    const auto m = tinyla::mat4f::perspective(tinyla::angle<float>::from_degrees(60.0f), 1.0f, 0.1f, 1000.0f);
-    constexpr auto a = std::array<std::array<float, 4>, 4> {
-        1.732051f, 0.000000f,  0.000000f,  0.000000f,
-        0.000000f, 1.732051f,  0.000000f,  0.000000f,
-        0.000000f, 0.000000f, -1.000200f, -0.200020f,
-        0.000000f, 0.000000f, -1.000000f,  0.000000f
-    };
-    compare(m, a);
-}
-
 TEST_CASE("det2")
 {
     constexpr float a[][4] = {
@@ -375,10 +339,6 @@ TEST_CASE("mat4 determinant", "[mat4]")
         const auto m = unique;
         REQUIRE(m.determinant() == Catch::Approx(0.0f));
     }
-    {
-        auto m = tinyla::mat4f::perspective(60.0_degf, 1.0f, 0.1f, 1000.0f);
-        REQUIRE(m.determinant() == Catch::Approx(-0.60006f));
-    }
 }
 
 TEST_CASE("mat4 inverted", "[mat4]")
@@ -390,16 +350,6 @@ TEST_CASE("mat4 inverted", "[mat4]")
     {
         const auto m = unique;
         compare(m.inverted(), tinyla::mat4f{tinyla::mat_init::identity});
-    }
-    {
-        const auto m = tinyla::mat4f::perspective(60.0_degf, 1.0f, 0.1f, 1000.0f);
-        constexpr auto a = std::array<std::array<float, 4>, 4> {
-             0.577350f,  0.000000f, -0.000000f,  0.000000f,
-             0.000000f,  0.577350f,  0.000000f, -0.000000f,
-            -0.000000f,  0.000000f, -0.000000f, -1.000000f,
-             0.000000f, -0.000000f, -4.999500f,  5.000500f
-        };
-        compare(m.inverted(), a);
     }
 }
 
@@ -420,4 +370,3 @@ int main(int argc, const char* argv[])
 {
     return Catch::Session().run(argc, argv);
 }
-
