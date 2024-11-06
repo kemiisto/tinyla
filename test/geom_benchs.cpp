@@ -1,3 +1,4 @@
+#include <tinyla/geom.hpp>
 #include <tinyla/mat.hpp>
 #include <tinyla/util.hpp>
 #define CATCH_CONFIG_RUNNER
@@ -26,14 +27,14 @@ const auto identity = tinyla::mat4f {
 
 TEST_CASE("mat4 scaling benchmark", "[mat4]")
 {
-    BENCHMARK("preScale") {
+    BENCHMARK("pre-scale by pre_scale") {
         auto m = unique;
-        m.pre_scale(tinyla::vec3f{2.0f, 3.0f, 4.0f});
+        tinyla::geom::pre_scale(m, tinyla::vec3f{2.0f, 3.0f, 4.0f});
         return m;
     };
 
-    BENCHMARK("preScale by matrix multiplication") {
-        auto t = tinyla::mat4f::scaling(tinyla::vec3f{2.0f, 3.0f, 4.0f});
+    BENCHMARK("pre-scale by matrix multiplication") {
+        auto t = tinyla::geom::scaling(tinyla::vec3f{2.0f, 3.0f, 4.0f});
         auto m = unique;
         m = t * m;
         return m;
@@ -42,14 +43,14 @@ TEST_CASE("mat4 scaling benchmark", "[mat4]")
 
 TEST_CASE("mat4 translation benchmark", "[mat4]")
 {
-    BENCHMARK("preTranslate") {
+    BENCHMARK("pre-translate by pre_translate") {
         auto m = unique;
-        m.pre_translate(tinyla::vec3f{1.0f, 2.0f, 3.0f});
+        tinyla::geom::pre_translate(m, tinyla::vec3f{1.0f, 2.0f, 3.0f});
         return m;
     };
 
-    BENCHMARK("preTranslate by matrix multiplication") {
-        auto t = tinyla::mat4f::translation(tinyla::vec3f{1.0f, 2.0f, 3.0f});
+    BENCHMARK("pre-translate by matrix multiplication") {
+        auto t = tinyla::geom::translation(tinyla::vec3f{1.0f, 2.0f, 3.0f});
         auto m = unique;
         m = t * m;
         return m;

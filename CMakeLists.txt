@@ -23,5 +23,5 @@ target_link_libraries(tinyla_mat_tests PRIVATE Catch2::Catch2)
 add_executable(tinyla_geom_tests test/geom_tests.cpp)
 target_link_libraries(tinyla_geom_tests PRIVATE Catch2::Catch2)
 
-add_executable(tinyla_mat_benchs test/mat_benchs.cpp)
+add_executable(tinyla_mat_benchs "test/geom_benchs.cpp")
 target_link_libraries(tinyla_mat_benchs PRIVATE Catch2::Catch2)
