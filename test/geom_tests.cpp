@@ -11,9 +11,9 @@ using namespace tinyla::literals;
 
 TEST_CASE("mat4 perspective", "[mat4]")
 {
-    const auto m = tinyla::geom::perspective(
-        60.0_degf, 1.0f, 0.1f, 1000.0f,
-        tinyla::geom::frustum::right_handed, tinyla::geom::clip_volume::minus_one_to_one);
+    const auto frustum = tinyla::geom::frustum{60.0_degf, 1.0f, 0.1f, 1000.0f};
+    const auto m = tinyla::geom::perspective(frustum,
+        tinyla::geom::handedness::right, tinyla::geom::clip_volume::minus_one_to_one);
     constexpr auto a = std::array<std::array<float, 4>, 4> {
         1.732051f, 0.000000f,  0.000000f,  0.000000f,
         0.000000f, 1.732051f,  0.000000f,  0.000000f,

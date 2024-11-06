@@ -25,3 +25,9 @@ target_link_libraries(tinyla_geom_tests PRIVATE Catch2::Catch2)
 
 add_executable(tinyla_mat_benchs "test/geom_benchs.cpp")
 target_link_libraries(tinyla_mat_benchs PRIVATE Catch2::Catch2)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(tinyla_vec_tests)
+catch_discover_tests(tinyla_mat_tests)
+catch_discover_tests(tinyla_geom_tests)

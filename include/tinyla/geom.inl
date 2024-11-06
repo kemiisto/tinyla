@@ -10,15 +10,23 @@
 
 namespace tinyla::geom {
     template<typename T>
-    mat<4,T> perspective(angle<T> const& vertical_fov, T aspect_ratio, T z_near, T z_far, frustum frustum, clip_volume clip_volume)
+    constexpr frustum<T>::frustum(angle<T> const& fov, T ar, T z_near, T z_far)
+        : m_fov{fov}, m_ar{ar}, m_z_near{z_near}, m_z_far{z_far}
+    {
+        assert(z_near != m_z_far);
+        assert(ar != T{0});
+    }
+
+    template<typename T>
+    mat<4,T> perspective(frustum<T> const& frustum, handedness handedness, clip_volume clip_volume)
     {
         auto p = mat<4, T>{mat_init::uninitialized};
         if (clip_volume == clip_volume::minus_one_to_one) {
-            p = detail::perspective_rh_mo(vertical_fov, aspect_ratio, z_near, z_far);
+            p = detail::perspective_rh_mo(frustum);
         } else {
-            p = detail::perspective_rh_zo(vertical_fov, aspect_ratio, z_near, z_far);
+            p = detail::perspective_rh_zo(frustum);
         }
-        if (frustum == frustum::left_handed) {
+        if (handedness == handedness::left) {
             p(2, 2) = -p(2, 2);
             p(3, 2) = -p(3, 2);
         }
@@ -280,19 +288,18 @@ namespace tinyla::geom {
 
     namespace detail {
         template<typename T>
-        mat<4,T> perspective_rh_mo(const angle<T>& vertical_fov, T aspect_ratio, T z_near, T z_far)
+        mat<4,T> perspective_rh_mo(frustum<T> const& frustum)
         {
-            assert(z_near != z_far);
-            assert(aspect_ratio != T{0});
-
-            T const half_angle = vertical_fov.radians() / T{2};
+            T const half_angle = frustum.fov().radians() / T{2};
             T const sin = std::sin(half_angle);
             assert(sin != T{0});
             T const cot = std::cos(half_angle) / sin;
+            T const& z_far = frustum.z_far();
+            T const& z_near = frustum.z_near();
             T const clip = z_far - z_near;
 
             auto p = mat<4, T>{mat_init::zero};
-            p(0, 0) = cot / aspect_ratio;
+            p(0, 0) = cot / frustum.ar();
             p(1, 1) = cot;
             p(2, 2) = -(z_far + z_near) / clip;
             p(3, 2) = -T{1};
@@ -301,19 +308,18 @@ namespace tinyla::geom {
         }
 
         template<typename T>
-        mat<4,T> perspective_rh_zo(const angle<T>& vertical_fov, T aspect_ratio, T z_near, T z_far)
+        mat<4,T> perspective_rh_zo(frustum<T> const& frustum)
         {
-            assert(z_near != z_far);
-            assert(aspect_ratio != T{0});
-
-            T const half_angle = vertical_fov.radians() / T{2};
+            T const half_angle = frustum.fov().radians() / T{2};
             T const sin = std::sin(half_angle);
             assert(sin != T{0});
             T const cot = std::cos(half_angle) / sin;
+            T const& z_far = frustum.z_far();
+            T const& z_near = frustum.z_near();
             T const clip = z_far - z_near;
 
             auto p = mat<4, T>{mat_init::zero};
-            p(0, 0) = cot / aspect_ratio;
+            p(0, 0) = cot / frustum.ar();
             p(1, 1) = cot;
             p(2, 2) = -z_far / clip;
             p(3, 2) = -T{1};

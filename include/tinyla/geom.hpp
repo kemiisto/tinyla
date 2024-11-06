@@ -4,9 +4,9 @@
 #include <tinyla/mat.hpp>
 
 namespace tinyla::geom {
-    enum class frustum {
-        left_handed,
-        right_handed
+    enum class handedness {
+        left,
+        right
     };
 
     enum class clip_volume {
@@ -15,7 +15,22 @@ namespace tinyla::geom {
     };
 
     template<typename T>
-    mat<4,T> perspective(angle<T> const& vertical_fov, T aspect_ratio, T z_near, T z_far, frustum frustum, clip_volume clip_volume);
+    class frustum {
+    public:
+        constexpr frustum(angle<T> const& fov, T ar, T z_near, T z_far);
+        angle<T> const& fov() const { return m_fov; }
+        T ar() const { return m_ar; }
+        T z_near() const { return m_z_near; }
+        T z_far() const { return m_z_far; }
+    private:
+        angle<T> m_fov;
+        T m_ar;
+        T m_z_near;
+        T m_z_far;
+    };
+
+    template<typename T>
+    mat<4,T> perspective(frustum<T> const& frustum, handedness handedness, clip_volume clip_volume);
 
     template<typename T>
     vec<2, T> project(mat<4, T> const& m, vec<4, T> const& v);
@@ -61,10 +76,10 @@ namespace tinyla::geom {
 
     namespace detail {
         template<typename T>
-        mat<4,T> perspective_rh_mo(angle<T> const& vertical_fov, T aspect_ratio, T z_near, T z_far);
+        mat<4,T> perspective_rh_mo(frustum<T> const& frustum);
 
         template<typename T>
-        mat<4,T> perspective_rh_zo(const angle<T>& vertical_fov, T aspect_ratio, T z_near, T z_far);
+        mat<4,T> perspective_rh_zo(frustum<T> const& frustum);
 
         template<typename T>
         void pre_rotate_x(tinyla::mat<4, T>& m, T c, T s)
