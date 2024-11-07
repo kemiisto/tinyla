@@ -11,19 +11,19 @@ constexpr auto v4a_minus_v4b = tinyla::vec4f{1.0f - 4.0f, 2.0f - 5.0f, 3.0f - 6.
 constexpr auto v4a_times_v4b = tinyla::vec4f{1.0f * 4.0f, 2.0f * 5.0f, 3.0f * 6.0f, 4.0f * 7.0f};
 constexpr auto v4a_divided_by_v4b = tinyla::vec4f{1.0f / 4.0f, 2.0f / 5.0f, 3.0f / 6.0f, 4.0f / 7.0f};
 
-TEST_CASE("Vec2 size", "[Vec2]")
+TEST_CASE("vec2 size", "[vec2]")
 {
     REQUIRE(sizeof(tinyla::vec2f) == 2 * sizeof(float));
 }
 
-TEST_CASE("Vec2 is constructed from initializer list", "[Vec2]")
+TEST_CASE("vec2 is constructed from initializer list", "[vec2]")
 {
     constexpr auto v = tinyla::vec2f{0.0f, 0.1f};
     constexpr auto a = std::array{0.0f, 0.1f};
     compare(v, a);
 }
 
-TEST_CASE("Vec2 length", "[Vec2]")
+TEST_CASE("vec2 length", "[vec2]")
 {
     REQUIRE(tinyla::vec2f{ 0.0f,  0.0f}.length() == 0.0f);               // zero
     REQUIRE(tinyla::vec2f{ 1.0f,  0.0f}.length() == 1.0f);               // 1x
@@ -33,7 +33,7 @@ TEST_CASE("Vec2 length", "[Vec2]")
     REQUIRE(tinyla::vec2f{ 2.0f, -2.0f}.length() == std::sqrt(8.0f));    // two
 }
 
-TEST_CASE("Vec2 normalized", "[Vec2]")
+TEST_CASE("vec2 normalized", "[vec2]")
 {
     // For zero vector glm::normalize() returns vector of NaNs.
     // We rather simply return the zero vector back.
@@ -45,7 +45,7 @@ TEST_CASE("Vec2 normalized", "[Vec2]")
     compare(tinyla::vec2f{ 2.0f, -2.0f}.normalized(), std::array{ 0.707107f, -0.707107f});  // two
 }
 
-TEST_CASE("Vec2 normalize", "[Vec2]")
+TEST_CASE("vec2 normalize", "[vec2]")
 {
     // For zero vector glm::normalize() returns vector of NaNs.
     // We rather simply return the zero vector back.
@@ -72,14 +72,14 @@ TEST_CASE("Vec2 normalize", "[Vec2]")
     compare(v5, std::array{ 0.707107f, -0.707107f});  // two
 }
 
-TEST_CASE("Vec3 is constructed from initializer list", "[Vec3]")
+TEST_CASE("vec3 is constructed from initializer list", "[vec3]")
 {
     constexpr auto v = tinyla::vec3f{0.0f, 0.1f, 0.2f};
     constexpr auto a = std::array{0.0f, 0.1f, 0.2f};
     compare(v, a);
 }
 
-TEST_CASE("Vec3 length", "[Vec3]")
+TEST_CASE("vec3 length", "[vec3]")
 {
     REQUIRE(tinyla::vec3f{ 0.0f,  0.0f,  0.0f}.length() == 0.0f);                // zero
     REQUIRE(tinyla::vec3f{ 1.0f,  0.0f,  0.0f}.length() == 1.0f);                // 1x
@@ -91,14 +91,14 @@ TEST_CASE("Vec3 length", "[Vec3]")
     REQUIRE(tinyla::vec3f{ 2.0f, -2.0f,  2.0f}.length() == std::sqrt(12.0f));    // two
 }
 
-TEST_CASE("Vec4 is constructed from initializer list", "[Vec4]")
+TEST_CASE("vec4 is constructed from initializer list", "[vec4]")
 {
     constexpr auto m = tinyla::vec4f{0.0f, 0.1f, 0.2f, 0.3f};
     constexpr auto a = std::array{0.0f, 0.1f, 0.2f, 0.3f};
     compare(m, a);
 }
 
-TEST_CASE("Vec4 component access", "[Vec4]")
+TEST_CASE("vec4 component access", "[vec4]")
 {
     constexpr auto m = tinyla::vec4f{0.0f, 0.1f, 0.2f, 0.3f};
     constexpr auto a = std::array{0.0f, 0.1f, 0.2f, 0.3f};
@@ -108,7 +108,7 @@ TEST_CASE("Vec4 component access", "[Vec4]")
     REQUIRE(m.w() == Catch::Approx(a[3]));
 }
 
-TEST_CASE("Vec4 data", "[Vec4]")
+TEST_CASE("vec4 data", "[vec4]")
 {
     tinyla::vec4f tglVec {0.0f, 0.1f, 0.2f, 0.3f};
     float a[4] {0.0f, 0.1f, 0.2f, 0.3f};
@@ -119,66 +119,66 @@ TEST_CASE("Vec4 data", "[Vec4]")
     }
 }
 
-TEST_CASE("Vec4 operator+=", "[Vec4]")
+TEST_CASE("vec4 operator+=", "[vec4]")
 {
     auto v = v4a;
     v += v4b;
     compare(v, v4a_plus_v4b);
 }
 
-TEST_CASE("Vec4 operator+", "[Vec4]")
+TEST_CASE("vec4 operator+", "[vec4]")
 {
     constexpr auto v = v4a + v4b;
     compare(v, v4a_plus_v4b);
 }
 
-TEST_CASE("Vec4 operator-=", "[Vec4]")
+TEST_CASE("vec4 operator-=", "[vec4]")
 {
     auto v = v4a;
     v -= v4b;
     compare(v, v4a_minus_v4b);
 }
 
-TEST_CASE("Vec4 operator-", "[Vec4]")
+TEST_CASE("vec4 operator-", "[vec4]")
 {
     constexpr auto tglVec = v4a - v4b;
     compare(tglVec, v4a_minus_v4b);
 }
 
-TEST_CASE("Vec4 operator*=", "[Vec4]")
+TEST_CASE("vec4 operator*=", "[vec4]")
 {
     auto v = v4a;
     v *= v4b;
     compare(v, v4a_times_v4b);
 }
 
-TEST_CASE("Vec4 operator*", "[Vec4]")
+TEST_CASE("vec4 operator*", "[vec4]")
 {
     constexpr auto v = v4a * v4b;
     compare(v, v4a_times_v4b);
 }
 
-TEST_CASE("Vec4 operator/=", "[Vec4]")
+TEST_CASE("vec4 operator/=", "[vec4]")
 {
     auto v = v4a;
     v /= v4b;
     compare(v, v4a_divided_by_v4b);
 }
 
-TEST_CASE("Vec4 operator/", "[Vec4]")
+TEST_CASE("vec4 operator/", "[vec4]")
 {
     constexpr auto v = v4a / v4b;
     compare(v, v4a_divided_by_v4b);
 }
 
-TEST_CASE("Vec4 unary operator-", "[Vec4]")
+TEST_CASE("vec4 unary operator-", "[vec4]")
 {
     auto v = tinyla::vec4f{0.0f, -0.1f, 0.2f, -0.3f};
     v = -v;
     compare(v, tinyla::vec4f{0.0f, 0.1f, -0.2f, 0.3f});
 }
 
-TEST_CASE("Vec4 length", "[Vec4]")
+TEST_CASE("vec4 length", "[vec4]")
 {
     REQUIRE(tinyla::vec4f{ 0.0f,  0.0f,  0.0f,  0.0f}.length() == 0.0f);                // zero
     REQUIRE(tinyla::vec4f{ 1.0f,  0.0f,  0.0f,  0.0f}.length() == 1.0f);                // 1x
@@ -192,7 +192,7 @@ TEST_CASE("Vec4 length", "[Vec4]")
     REQUIRE(tinyla::vec4f{ 2.0f, -2.0f,  2.0f,  2.0f}.length() == std::sqrt(16.0f));    // two
 }
 
-TEST_CASE("Vecn")
+TEST_CASE("vecn")
 {
     auto v = tinyla::vec{0, 1, 2, 3, 4, 5};
     REQUIRE(v[0] == 0);
@@ -203,7 +203,7 @@ TEST_CASE("Vecn")
     REQUIRE(v[5] == 5);
 }
 
-TEST_CASE("Vec4 from Vec3")
+TEST_CASE("vec4 from vec3")
 {
     auto v3 = tinyla::vec3i{0, 1, 2};
     auto v4 = tinyla::vec4i{v3, 3};

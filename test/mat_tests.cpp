@@ -8,7 +8,7 @@
 
 using namespace tinyla::literals;
 
-TEST_CASE("Mat3 is constructed from initializer list", "[Mat3]")
+TEST_CASE("mat3 is constructed from initializer list", "[mat3]")
 {
     const auto m = tinyla::mat3f {
         0.0f, 0.1f, 0.2f,
