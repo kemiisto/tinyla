@@ -9,19 +9,19 @@ namespace tinyla {
     public:
         constexpr static angle from_radians(T radians)
         {
-            return angle(radians);
+            return angle{radians};
         }
         constexpr static angle from_degrees(T degrees)
         {
-            return angle(degrees * (std::numbers::pi_v<T> / 180));
+            return angle{degrees * (std::numbers::pi_v<T> / 180)};
         }
         T radians() const
         {
-            return radians_;
+            return m_radians;
         }
     private:
-        explicit constexpr angle(T r) : radians_{r} {}
-        T radians_;
+        explicit constexpr angle(T r) : m_radians{r} {}
+        T m_radians;
     };
 
     namespace literals {
@@ -53,4 +53,5 @@ namespace tinyla {
         }
     }
 }
+
 #endif // TINYLA_ANGLE_HPP
