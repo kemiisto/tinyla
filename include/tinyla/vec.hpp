@@ -25,42 +25,17 @@ namespace tinyla
     requires(N >= 2)
     class vec {
     public:
-        constexpr explicit vec(vec_init init)
-        {
-            switch (init) {
-                case vec_init::uninitialized:
-                    break;
-                case vec_init::zero:
-                    set_to_zero();
-                    break;
-            }
-        }
-
-        constexpr vec(std::initializer_list<T> values)
-        {
-            assert(values.size() == N);
-            auto it = values.begin();
-            for (std::size_t i = 0; i < N; ++i) v[i] = *it++;
-        }
+        constexpr explicit vec(vec_init init);
+        constexpr vec(std::initializer_list<T> values);
 
         template<std::size_t M>
-        constexpr vec(const vec<M, T>& smaller_vec, std::initializer_list<T> values) requires(M < N)
-        {
-            assert(values.size() == N - M);
-            for (std::size_t i = 0; i < M; ++i) v[i] = smaller_vec[i];
-            auto it = values.begin();
-            for (std::size_t i = M; i < N; ++i) v[i] = *it++;
-        }
+        constexpr vec(const vec<M, T>& smaller_vec, std::initializer_list<T> values) requires(M < N);
 
         template<std::size_t M, typename...Ts>
-        constexpr vec(const vec<M, T>& smaller_vec, Ts... vs) requires(M < N && sizeof...(Ts) == N - M)
-            : vec(smaller_vec, std::initializer_list<T>{ vs... })
-        {
-        }
+        constexpr vec(const vec<M, T>& smaller_vec, Ts... vs) requires(M < N && sizeof...(Ts) == N - M);
 
         constexpr void set_to_zero();
-
-        constexpr void fill(const T& value) { v.fill(value); }
+        constexpr void fill(const T& value);
 
         constexpr T& operator[](std::size_t i) { return v[i]; }
         constexpr T operator[](std::size_t i) const { return v[i]; }
@@ -102,136 +77,45 @@ namespace tinyla
 
         // Element-wise binary operations
 
-        constexpr vec& operator+=(vec rhs) noexcept
-        {
-            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::plus<T>());
-            return *this;
-        }
+        constexpr vec& operator+=(vec rhs) noexcept;
+        constexpr friend vec operator+ <>(vec vec1, vec vec2) noexcept;
 
-        constexpr friend vec operator+(vec vec1, vec vec2) noexcept
-        {
-            vec1 += vec2;
-            return vec1;
-        }
+        constexpr vec& operator-=(vec rhs) noexcept;
+        constexpr friend vec operator- <>(vec vec1, vec vec2) noexcept;
 
-        constexpr vec& operator-=(vec rhs) noexcept
-        {
-            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::minus<T>());
-            return *this;
-        }
+        constexpr vec& operator*=(float a) noexcept;
+        constexpr friend vec operator* <>(float a, vec vec) noexcept;
+        constexpr friend vec operator* <>(vec vec, float a) noexcept;
 
-        constexpr friend vec operator-(vec vec1, vec vec2) noexcept
-        {
-            vec1 -= vec2;
-            return vec1;
-        }
+        constexpr vec& operator*=(vec rhs) noexcept;
+        constexpr friend vec operator* <>(vec vec1, vec vec2) noexcept;
 
-        constexpr vec& operator*=(float a) noexcept
-        {
-            std::transform(v.begin(), v.end(), v.begin(), [a](auto& c) { return a * c; });
-            return *this;
-        }
+        constexpr vec& operator/=(float a) noexcept;
+        constexpr friend vec operator/ <>(vec vec, float a) noexcept;
 
-        constexpr friend vec operator*(float a, vec vec) noexcept
-        {
-            vec *= a;
-            return vec;
-        }
-
-        constexpr friend vec operator*(vec vec, float a) noexcept
-        {
-            vec *= a;
-            return vec;
-        }
-
-        constexpr vec& operator*=(vec rhs) noexcept
-        {
-            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::multiplies<T>());
-            return *this;
-        }
-
-        constexpr friend vec operator*(vec vec1, vec vec2) noexcept
-        {
-            vec1 *= vec2;
-            return vec1;
-        }
-
-        constexpr vec& operator/=(float a) noexcept
-        {
-            std::transform(v.begin(), v.end(), v.begin(), [a](auto& c) { return c / a; });
-            return *this;
-        }
-
-        constexpr friend vec operator/(vec vec, float a) noexcept
-        {
-            vec /= a;
-            return vec;
-        }
-
-        constexpr vec& operator/=(vec rhs) noexcept
-        {
-            std::transform(v.begin(), v.end(), rhs.v.begin(), v.begin(), std::divides<T>());
-            return *this;
-        }
-
-        constexpr friend vec operator/(vec vec1, vec vec2) noexcept
-        {
-            vec1 /= vec2;
-            return vec1;
-        }
+        constexpr vec& operator/=(vec rhs) noexcept;
+        constexpr friend vec operator/ <>(vec vec1, vec vec2) noexcept;
 
         // Unary minus (negation)
-        constexpr friend vec operator-(vec vec) noexcept
-        {
-            auto result = tinyla::vec<N,T>{tinyla::vec_init::uninitialized};
-            std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), std::negate<T>());
-            return result;
-        }
+        constexpr friend vec operator- <>(vec vec) noexcept;
 
         template<typename U>
-        constexpr vec<N,U> cast() const noexcept
-        {
-            auto result = vec<N,U>{vec_init::uninitialized};
-            for (auto i = std::size_t{0}; i < N; ++i) result[i] = static_cast<U>(v[i]);
-            return result;
-        }
+        constexpr vec<N,U> cast() const noexcept;
 
-        static constexpr T dot(vec vec1, vec vec2) noexcept
-        {
-            return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
-        }
-
-        static constexpr vec cross(vec vec1, vec vec2) noexcept requires(N == 3)
-        {
-            return {
-                vec1.y() * vec2.z() - vec1.z() * vec2.y(),
-                vec1.z() * vec2.x() - vec1.x() * vec2.z(),
-                vec1.x() * vec2.y() - vec1.y() * vec2.x(),
-            };
-        }
+        static constexpr T dot(vec vec1, vec vec2) noexcept;
+        static constexpr vec cross(vec vec1, vec vec2) noexcept requires(N == 3);
 
         /**
         * Returns the unit normal vector of a plane spanned by vectors b - a and c - a.
         * Can be used to calculate a normal to a triangle with vertices a, b, c at point a.
         */
-        static constexpr vec normal(vec a, vec b, vec c) noexcept requires(N == 3)
-        {
-            auto const ab = b - a;
-            auto const ac = c - a;
-            return cross(ab, ac).normalized();
-        }
+        static constexpr vec normal(vec a, vec b, vec c) noexcept requires(N == 3);
 
         /**
         * Returns the unit normal vector of a plane spanned by vectors vs[1] - vs[0] and vs[2] - vs[0].
         * Can be used to calculate a normal to a triangle with vertices vs[0], vs[1], vs[2] at point vs[0].
         */
-        static constexpr vec normal(std::array<vec, 3> const& vs) noexcept requires(N == 3)
-        {
-            auto const& a = vs[0];
-            auto const& b = vs[1];
-            auto const& c = vs[2];
-            return normal(a, b, c);
-        }
+        static constexpr vec normal(std::array<vec, 3> const& vs) noexcept requires(N == 3);
 
         friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
     private:
@@ -252,29 +136,6 @@ namespace tinyla
     using vec4f = vec<4, float>;
 }
 
-template<std::size_t N, typename T>
-requires(N >= 2)
-constexpr void tinyla::vec<N, T>::set_to_zero()
-{
-    fill(T{0});
-}
-
-// If the vector is already normalized or zero, then this function simply returns it back.
-template<std::size_t N, typename T>
-requires (N >= 2)
-tinyla::vec<N, T> tinyla::vec<N, T>::normalized() const noexcept
-{
-    const float len = length();
-    if (close_to_zero(len - 1.0f) || close_to_zero(len)) return *this;
-    return *this / len;
-}
-
-template<std::size_t N, typename T>
-requires (N >= 2)
-void tinyla::vec<N, T>::normalize() noexcept
-{
-    const float len = length();
-    if (!close_to_zero(len - 1.0f) && !close_to_zero(len)) *this /= len;
-}
+#include "vec.inl"
 
 #endif // TINYLA_VEC_H
