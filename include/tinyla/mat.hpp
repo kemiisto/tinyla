@@ -59,15 +59,6 @@ namespace tinyla
         friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
     private:
         T m[N][N];
-
-        void pre_rotate_x(T c, T s) requires (N == 4);
-        void post_rotate_x(T c, T s) requires (N == 4);
-
-        void pre_rotate_y(T c, T s) requires (N == 4);
-        void post_rotate_y(T c, T s) requires (N == 4);
-
-        void pre_rotate_z(T c, T s) requires (N == 4);
-        void post_rotate_z(T c, T s) requires (N == 4);
     };
 
     using mat2i = mat<2,int>;
