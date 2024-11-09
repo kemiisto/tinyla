@@ -10,7 +10,7 @@ using namespace tinyla::literals;
 
 TEST_CASE("mat3 is constructed from initializer list", "[mat3]")
 {
-    const auto m = tinyla::mat3f {
+    constexpr auto m = tinyla::mat3f {
         0.0f, 0.1f, 0.2f,
         1.0f, 1.1f, 1.2f,
         2.0f, 2.1f, 2.2f
@@ -25,7 +25,7 @@ TEST_CASE("mat3 is constructed from initializer list", "[mat3]")
 
 TEST_CASE("mat4 is constructed from initializer list", "[mat4]")
 {
-    const auto m = tinyla::mat4f {
+    constexpr auto m = tinyla::mat4f {
         0.0f, 0.1f, 0.2f, 0.3f,
         1.0f, 1.1f, 1.2f, 1.3f,
         2.0f, 2.1f, 2.2f, 2.3f,
@@ -42,7 +42,7 @@ TEST_CASE("mat4 is constructed from initializer list", "[mat4]")
 
 TEST_CASE("mat4 is constructed as identity matrix", "[mat4]")
 {
-    const auto m = tinyla::mat4f(tinyla::mat_init::identity);
+    constexpr auto m = tinyla::mat4f{tinyla::mat_init::identity};
     constexpr auto a = std::array<std::array<float, 4>, 4> {
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
@@ -54,7 +54,7 @@ TEST_CASE("mat4 is constructed as identity matrix", "[mat4]")
 
 TEST_CASE("mat4 data", "[mat4]")
 {
-    const auto m = tinyla::mat4f {
+    constexpr auto m = tinyla::mat4f {
         0.0f, 0.1f, 0.2f, 0.3f,
         1.0f, 1.1f, 1.2f, 1.3f,
         2.0f, 2.1f, 2.2f, 2.3f,
@@ -154,11 +154,11 @@ TEST_CASE("det4")
 TEST_CASE("mat4 determinant", "[mat4]")
 {
     {
-        const auto m = tinyla::mat4f(tinyla::mat_init::identity);
+        constexpr auto m = tinyla::mat4f{tinyla::mat_init::identity};
         REQUIRE(m.determinant() == Catch::Approx(1.0f));
     }
     {
-        const auto m = unique;
+        constexpr auto m = unique;
         REQUIRE(m.determinant() == Catch::Approx(0.0f));
     }
 }
@@ -166,18 +166,18 @@ TEST_CASE("mat4 determinant", "[mat4]")
 TEST_CASE("mat4 inverted", "[mat4]")
 {
     {
-        const auto m = tinyla::mat4f{tinyla::mat_init::identity};
+        constexpr auto m = tinyla::mat4f{tinyla::mat_init::identity};
         compare(m.inverted(), m);
     }
     {
-        const auto m = unique;
+        constexpr auto m = unique;
         compare(m.inverted(), tinyla::mat4f{tinyla::mat_init::identity});
     }
 }
 
 TEST_CASE("mat4 * vec4", "[mat4]")
 {
-    const auto m = tinyla::mat4i {
+    constexpr auto m = tinyla::mat4i {
          1,  2,  3,  4,
          5,  6,  7,  8,
          9, 10, 11, 12,
