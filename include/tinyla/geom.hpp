@@ -45,28 +45,16 @@ namespace tinyla::geom {
     mat<4, T> rotation(angle<T> const& angle, vec<3, T> const& axis);
 
     template<typename T>
-    void pre_rotate(mat<4, T> const& m, angle<T> const& angle, vec<3, T> const& axis);
+    void pre_rotate(mat<4, T>& m, angle<T> const& angle, vec<3, T> const& axis);
 
     template<typename T>
-    void post_rotate(mat<4, T> const& m, const angle<T>& angle, const vec<3, T>& axis);
+    void post_rotate(mat<4, T>& m, const angle<T>& angle, const vec<3, T>& axis);
 
     template<typename T>
     void pre_translate(mat<4, T>& m, vec<3, T> const& t);
 
     template<typename T>
     void post_translate(mat<4, T>& m, const vec<3, T>& t);
-
-    template<typename T>
-    void pre_scale(mat<4, T>& m, T s)
-    {
-        pre_scale({s, s, s});
-    }
-
-    template<typename T>
-    void post_scale(mat<4, T>& m, T s)
-    {
-        post_scale({s, s, s});
-    }
 
     template<typename T>
     void pre_scale(mat<4, T>& m, vec<3, T> const& s);
