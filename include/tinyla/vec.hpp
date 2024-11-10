@@ -97,7 +97,7 @@ namespace tinyla
         constexpr friend vec operator/ <>(vec vec1, vec vec2) noexcept;
 
         // Unary minus (negation)
-        constexpr friend vec operator- <>(vec vec) noexcept;
+        constexpr vec operator-() noexcept;
 
         template<typename U>
         constexpr vec<N,U> cast() const noexcept;

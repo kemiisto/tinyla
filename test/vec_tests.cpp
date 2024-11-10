@@ -173,8 +173,7 @@ TEST_CASE("vec4 operator/", "[vec4]")
 
 TEST_CASE("vec4 unary operator-", "[vec4]")
 {
-    auto v = tinyla::vec4f{0.0f, -0.1f, 0.2f, -0.3f};
-    v = -v;
+    constexpr auto v = -tinyla::vec4f{0.0f, -0.1f, 0.2f, -0.3f};
     compare(v, tinyla::vec4f{0.0f, 0.1f, -0.2f, 0.3f});
 }
 

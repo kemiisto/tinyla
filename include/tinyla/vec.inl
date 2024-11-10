@@ -186,10 +186,10 @@ namespace tinyla
 
     template<std::size_t N, typename T>
     requires (N >= 2)
-    constexpr vec<N, T> operator-(vec<N, T> vec) noexcept
+    constexpr vec<N, T> vec<N, T>::operator-() noexcept
     {
-        auto result = tinyla::vec<N,T>{tinyla::vec_init::uninitialized};
-        std::transform(vec.v.begin(), vec.v.end(), result.v.begin(), std::negate<T>());
+        auto result = tinyla::vec<N,T>{vec_init::uninitialized};
+        std::transform(v.begin(), v.end(), result.v.begin(), std::negate<T>());
         return result;
     }
 
