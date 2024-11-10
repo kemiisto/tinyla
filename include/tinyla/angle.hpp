@@ -19,6 +19,11 @@ namespace tinyla {
         {
             return m_radians;
         }
+        // Unary minus (negation)
+        constexpr angle operator-() noexcept
+        {
+            return angle{-m_radians};
+        }
     private:
         explicit constexpr angle(T r) : m_radians{r} {}
         T m_radians;
