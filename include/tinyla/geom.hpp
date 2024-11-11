@@ -2,8 +2,58 @@
 #define TINYLA_GEOM_HPP
 
 #include <tinyla/mat.hpp>
+#include <cstddef>
+#include <numbers>
+
+namespace tinyla {
+    template<std::size_t N, typename T>
+    requires(N >= 2)
+    class vec;
+}
 
 namespace tinyla::geom {
+    template<typename T>
+    class angle {
+    public:
+        constexpr static angle from_radians(T radians);
+        constexpr static angle from_degrees(T degrees);
+        T radians() const { return m_radians; }
+        // Unary minus (negation)
+        constexpr angle operator-() noexcept { return angle{-m_radians}; }
+    private:
+        explicit constexpr angle(T r) : m_radians{r} {}
+        T m_radians;
+    };
+
+    namespace literals {
+        constexpr angle<float> operator ""_radf(long double n)
+        {
+            return angle<float>::from_radians(static_cast<float>(n));
+        }
+        constexpr angle<float> operator ""_degf(long double n)
+        {
+            return angle<float>::from_degrees(static_cast<float>(n));
+        }
+
+        constexpr angle<double> operator ""_radd(long double n)
+        {
+            return angle<double>::from_radians(static_cast<double>(n));
+        }
+        constexpr angle<double> operator ""_degd(long double n)
+        {
+            return angle<double>::from_degrees(static_cast<double>(n));
+        }
+
+        constexpr angle<long double> operator ""_radld(long double n)
+        {
+            return angle<long double>::from_radians(n);
+        }
+        constexpr angle<long double> operator ""_degld(long double n)
+        {
+            return angle<long double>::from_degrees(n);
+        }
+    }
+
     enum class handedness {
         left,
         right
@@ -70,102 +120,22 @@ namespace tinyla::geom {
         mat<4,T> perspective_rh_zo(frustum<T> const& frustum);
 
         template<typename T>
-        void pre_rotate_x(tinyla::mat<4, T>& m, T c, T s)
-        {
-            /**
-             * | 1   0   0   0 |   | m00   m01   m02   m03 |   | m00           m01           m02           m03         |
-             * | 0   c  -s   0 |   | m10   m11   m12   m13 |   | m10*c-m20*s   m11*c-m21*s   m12*c-m22*s   m13*c-m23*s |
-             * | 0   s   c   0 | * | m20   m21   m22   m23 | = | m20*c+m10*s   m21*c+m11*s   m22*c+m12*s   m23*c+m13*s |
-             * | 0   0   0   1 |   | m30   m31   m32   m33 |   | m30           m31           m32           m33         |
-             */
-            T tmp;
-            m(1, 0) = (tmp = m(1, 0)) * c - m(2, 0) * s;    m(2, 0) = m(2, 0) * c + tmp * s;
-            m(1, 1) = (tmp = m(1, 1)) * c - m(2, 1) * s;    m(2, 1) = m(2, 1) * c + tmp * s;
-            m(1, 2) = (tmp = m(1, 2)) * c - m(2, 2) * s;    m(2, 2) = m(2, 2) * c + tmp * s;
-            m(1, 3) = (tmp = m(1, 3)) * c - m(2, 3) * s;    m(2, 3) = m(2, 3) * c + tmp * s;
-        }
+        void pre_rotate_x(tinyla::mat<4, T>& m, T c, T s);
 
         template<typename T>
-        void post_rotate_x(tinyla::mat<4, T>& m, T c, T s)
-        {
-            /**
-             * | m00   m01   m02   m03 |   | 1   0   0   0 |   | m00    m01*c + m02*s    -m01*s + m02*c   m03 |
-             * | m10   m11   m12   m13 |   | 0   c  -s   0 |   | m10    m11*c + m12*s    -m11*s + m12*c   m13 |
-             * | m20   m21   m22   m23 | * | 0   s   c   0 | = | m20    m21*c + m22*s    -m21*s + m22*c   m23 |
-             * | m30   m31   m32   m33 |   | 0   0   0   1 |   | m30    m31*c + m32*s    -m31*s + m32*c   m33 |
-             */
-
-            T tmp;
-            m(0, 1) = (tmp = m(0, 1)) * c + m(0, 2) * s;    m(0, 2) = -tmp * s + m(0, 2) * c;
-            m(1, 1) = (tmp = m(1, 1)) * c + m(1, 2) * s;    m(1, 2) = -tmp * s + m(1, 2) * c;
-            m(2, 1) = (tmp = m(2, 1)) * c + m(2, 2) * s;    m(2, 2) = -tmp * s + m(2, 2) * c;
-            m(3, 1) = (tmp = m(3, 1)) * c + m(3, 2) * s;    m(3, 2) = -tmp * s + m(3, 2) * c;
-        }
+        void post_rotate_x(tinyla::mat<4, T>& m, T c, T s);
 
         template<typename T>
-        void pre_rotate_y(tinyla::mat<4, T>& m, T c, T s)
-        {
-            /**
-             * |  c   0   s   0 |   | m00   m01   m02   m03 |   | m00*c+m20*s   m01*c+m21*s   m02*c+m22*s   m03*c+m23*s |
-             * |  0   1   0   0 |   | m10   m11   m12   m13 |   | m10           m11           m12           m13         |
-             * | -s   0   c   0 | * | m20   m21   m22   m23 | = | m20*c-m00*s   m21*c-m01*s   m22*c-m02*s   m23*c-m03*s |
-             * |  0   0   0   1 |   | m30   m31   m32   m33 |   | m30           m31           m32           m33         |
-             */
-            T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c + m(2, 0) * s;    m(2, 0) = m(2, 0) * c - tmp * s;
-            m(0, 1) = (tmp = m(0, 1)) * c + m(2, 1) * s;    m(2, 1) = m(2, 1) * c - tmp * s;
-            m(0, 2) = (tmp = m(0, 2)) * c + m(2, 2) * s;    m(2, 2) = m(2, 2) * c - tmp * s;
-            m(0, 3) = (tmp = m(0, 3)) * c + m(2, 3) * s;    m(2, 3) = m(2, 3) * c - tmp * s;
-        }
+        void pre_rotate_y(tinyla::mat<4, T>& m, T c, T s);
 
         template<typename T>
-        void post_rotate_y(tinyla::mat<4, T>& m, T c, T s)
-        {
-            /**
-             * | m00   m01   m02   m03 |   |  c   0   s   0 |   | m00*c - m02*s   m01   m00*s + m02*c   m03 |
-             * | m10   m11   m12   m13 |   |  0   1   0   0 |   | m10*c - m12*s   m11   m10*s + m12*c   m13 |
-             * | m20   m21   m22   m23 | * | -s   0   c   0 | = | m20*c - m22*s   m21   m20*s + m22*c   m23 |
-             * | m30   m31   m32   m33 |   |  0   0   0   1 |   | m30*c - m32*s   m31   m30*s + m32*c   m33 |
-             */
-            T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c - m(0, 2) * s;    m(0, 2) = tmp * s + m(0, 2) * c;
-            m(1, 0) = (tmp = m(1, 0)) * c - m(1, 2) * s;    m(1, 2) = tmp * s + m(1, 2) * c;
-            m(2, 0) = (tmp = m(2, 0)) * c - m(2, 2) * s;    m(2, 2) = tmp * s + m(2, 2) * c;
-            m(3, 0) = (tmp = m(3, 0)) * c - m(3, 2) * s;    m(3, 2) = tmp * s + m(3, 2) * c;
-        }
+        void post_rotate_y(tinyla::mat<4, T>& m, T c, T s);
 
         template<typename T>
-        void pre_rotate_z(tinyla::mat<4, T>& m, T c, T s)
-        {
-            /**
-             * | c   -s   0   0 |   | m00   m01   m02   m03 |   | m00*c-m10*s   m01*c-m11*s   m02*c-m12*s   m03*c-m13*s |
-             * | s    c   0   0 |   | m10   m11   m12   m13 |   | m10*c+m00*s   m11*c+m01*s   m12*c+m02*s   m13*c+m03*s |
-             * | 0    0   1   0 | * | m20   m21   m22   m23 | = | m20           m21           m22           m23         |
-             * | 0    0   0   1 |   | m30   m31   m32   m33 |   | m30           m31           m32           m33         |
-             */
-            T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c - m(1, 0) * s;  m(1, 0) = m(1, 0) * c + tmp * s;
-            m(0, 1) = (tmp = m(0, 1)) * c - m(1, 1) * s;  m(1, 1) = m(1, 1) * c + tmp * s;
-            m(0, 2) = (tmp = m(0, 2)) * c - m(1, 2) * s;  m(1, 2) = m(1, 2) * c + tmp * s;
-            m(0, 3) = (tmp = m(0, 3)) * c - m(1, 3) * s;  m(1, 3) = m(1, 3) * c + tmp * s;
-        }
+        void pre_rotate_z(tinyla::mat<4, T>& m, T c, T s);
 
         template<typename T>
-        void post_rotate_z(tinyla::mat<4, T>& m, T c, T s)
-        {
-            /**
-             * | m00   m01   m02   m03 |   | c   -s   0   0 |   | m00*c + m01*s   -m00*s - m01*c   m02   m03 |
-             * | m10   m11   m12   m13 |   | s    c   0   0 |   | m10*c + m11*s   -m10*s - m11*c   m12   m13 |
-             * | m20   m21   m22   m23 | * | 0    0   1   0 | = | m20*c + m21*s   -m20*s - m21*c   m22   m23 |
-             * | m30   m31   m32   m33 |   | 0    0   0   1 |   | m30*c + m31*s   -m30*s - m31*c   m32   m33 |
-             */
-
-            T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c + m(0, 1) * s;    m(0, 1) = -tmp * s + m(0, 1) * c;
-            m(1, 0) = (tmp = m(1, 0)) * c + m(1, 1) * s;    m(1, 1) = -tmp * s + m(1, 1) * c;
-            m(2, 0) = (tmp = m(2, 0)) * c + m(2, 1) * s;    m(2, 1) = -tmp * s + m(2, 1) * c;
-            m(3, 0) = (tmp = m(3, 0)) * c + m(3, 1) * s;    m(3, 1) = -tmp * s + m(3, 1) * c;
-        }
+        void post_rotate_z(tinyla::mat<4, T>& m, T c, T s);
     }
 }
 

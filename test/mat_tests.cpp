@@ -1,3 +1,4 @@
+#include <tinyla/geom.hpp>
 #include <tinyla/mat.hpp>
 #include <tinyla/util.hpp>
 #define CATCH_CONFIG_RUNNER
@@ -6,7 +7,7 @@
 #include "data.hpp"
 #include <array>
 
-using namespace tinyla::literals;
+using namespace tinyla::geom::literals;
 
 TEST_CASE("mat3 is constructed from initializer list", "[mat3]")
 {

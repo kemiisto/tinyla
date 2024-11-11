@@ -1,12 +1,7 @@
 #ifndef TINYLA_MAT_H
 #define TINYLA_MAT_H
 
-#include <tinyla/angle.hpp>
 #include <tinyla/vec.hpp>
-#include <tinyla/util.hpp>
-#include <array>
-#include <cassert>
-#include <cmath>
 #include <initializer_list>
 #include <iostream>
 

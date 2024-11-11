@@ -7,7 +7,7 @@
 #include "data.hpp"
 #include <array>
 
-using namespace tinyla::literals;
+using namespace tinyla::geom::literals;
 
 TEST_CASE("mat4 perspective", "[mat4]")
 {
