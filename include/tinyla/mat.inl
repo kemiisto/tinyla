@@ -35,14 +35,14 @@ constexpr tinyla::mat<N,T>::mat(std::initializer_list<T> values)
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-constexpr T& tinyla::mat<N,T>::operator()(std::size_t row, std::size_t column)
+constexpr T& tinyla::mat<N,T>::operator[](std::size_t row, std::size_t column)
 {
     return m[column][row];
 }
 
 template<std::size_t N, typename T>
 requires(N >= 2)
-constexpr T tinyla::mat<N,T>::operator()(std::size_t row, std::size_t column) const
+constexpr T tinyla::mat<N,T>::operator[](std::size_t row, std::size_t column) const
 {
     return m[column][row];
 }

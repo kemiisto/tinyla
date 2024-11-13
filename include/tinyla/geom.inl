@@ -39,8 +39,8 @@ namespace tinyla::geom {
             p = detail::perspective_rh_zo(frustum);
         }
         if (handedness == handedness::left) {
-            p(2, 2) = -p(2, 2);
-            p(3, 2) = -p(3, 2);
+            p[2, 2] = -p[2, 2];
+            p[3, 2] = -p[3, 2];
         }
         return p;
     }
@@ -65,10 +65,10 @@ namespace tinyla::geom {
          * | 0   0   0   1 |
          */
         auto m = mat<4, T>{mat_init::zero};
-        m(0, 0) = s.x();
-        m(1, 1) = s.y();
-        m(2, 2) = s.z();
-        m(3, 3) = T{1};
+        m[0, 0] = s.x();
+        m[1, 1] = s.y();
+        m[2, 2] = s.z();
+        m[3, 3] = T{1};
         return m;
     }
 
@@ -82,9 +82,9 @@ namespace tinyla::geom {
          * | 0  0  0  1  |
          */
         auto m = mat<4, T>{mat_init::identity};
-        m(0, 3) = t.x();
-        m(1, 3) = t.y();
-        m(2, 3) = t.z();
+        m[0, 3] = t.x();
+        m[1, 3] = t.y();
+        m[2, 3] = t.z();
         return m;
     }
 
@@ -111,25 +111,25 @@ namespace tinyla::geom {
 
         auto m = mat<4, T>{mat_init::uninitialized};
 
-        m(0, 0) = x * x * ic + c;
-        m(1, 0) = y * x * ic + z * s;
-        m(2, 0) = x * z * ic - y * s;
-        m(3, 0) = T{ 0 };
+        m[0, 0] = x * x * ic + c;
+        m[1, 0] = y * x * ic + z * s;
+        m[2, 0] = x * z * ic - y * s;
+        m[3, 0] = T{0};
 
-        m(0, 1) = x * y * ic - z * s;
-        m(1, 1) = y * y * ic + c;
-        m(2, 1) = y * z * ic + x * s;
-        m(3, 1) = T{ 0 };
+        m[0, 1] = x * y * ic - z * s;
+        m[1, 1] = y * y * ic + c;
+        m[2, 1] = y * z * ic + x * s;
+        m[3, 1] = T{0};
 
-        m(0, 2) = x * z * ic + y * s;
-        m(1, 2) = y * z * ic - x * s;
-        m(2, 2) = z * z * ic + c;
-        m(3, 2) = T{ 0 };
+        m[0, 2] = x * z * ic + y * s;
+        m[1, 2] = y * z * ic - x * s;
+        m[2, 2] = z * z * ic + c;
+        m[3, 2] = T{0};
 
-        m(0, 3) = T{0};
-        m(1, 3) = T{0};
-        m(2, 3) = T{0};
-        m(3, 3) = T{ 1 };
+        m[0, 3] = T{0};
+        m[1, 3] = T{0};
+        m[2, 3] = T{0};
+        m[3, 3] = T{1};
 
         return m;
     }
@@ -145,21 +145,21 @@ namespace tinyla::geom {
          *
          * All columns are changing.
          */
-        m(0, 0) += m(3, 0) * t.x();
-        m(1, 0) += m(3, 0) * t.y();
-        m(2, 0) += m(3, 0) * t.z();
+        m[0, 0] += m[3, 0] * t.x();
+        m[1, 0] += m[3, 0] * t.y();
+        m[2, 0] += m[3, 0] * t.z();
 
-        m(0, 1) += m(3, 1) * t.x();
-        m(1, 1) += m(3, 1) * t.y();
-        m(2, 1) += m(3, 1) * t.z();
+        m[0, 1] += m[3, 1] * t.x();
+        m[1, 1] += m[3, 1] * t.y();
+        m[2, 1] += m[3, 1] * t.z();
 
-        m(0, 2) += m(3, 2) * t.x();
-        m(1, 2) += m(3, 2) * t.y();
-        m(2, 2) += m(3, 2) * t.z();
+        m[0, 2] += m[3, 2] * t.x();
+        m[1, 2] += m[3, 2] * t.y();
+        m[2, 2] += m[3, 2] * t.z();
 
-        m(0, 3) += m(3, 3) * t.x();
-        m(1, 3) += m(3, 3) * t.y();
-        m(2, 3) += m(3, 3) * t.z();
+        m[0, 3] += m[3, 3] * t.x();
+        m[1, 3] += m[3, 3] * t.y();
+        m[2, 3] += m[3, 3] * t.z();
     }
 
     template<typename T>
@@ -173,10 +173,10 @@ namespace tinyla::geom {
          *
          * Only the last column is changing.
          */
-        m(0, 3) += m(0, 0) * t.x() + m(0, 1) * t.y() + m(0, 2) * t.z();
-        m(1, 3) += m(1, 0) * t.x() + m(1, 1) * t.y() + m(1, 2) * t.z();
-        m(2, 3) += m(2, 0) * t.x() + m(2, 1) * t.y() + m(2, 2) * t.z();
-        m(3, 3) += m(3, 0) * t.x() + m(3, 1) * t.y() + m(3, 2) * t.z();
+        m[0, 3] += m[0, 0] * t.x() + m[0, 1] * t.y() + m[0, 2] * t.z();
+        m[1, 3] += m[1, 0] * t.x() + m[1, 1] * t.y() + m[1, 2] * t.z();
+        m[2, 3] += m[2, 0] * t.x() + m[2, 1] * t.y() + m[2, 2] * t.z();
+        m[3, 3] += m[3, 0] * t.x() + m[3, 1] * t.y() + m[3, 2] * t.z();
     }
 
     template<typename T>
@@ -191,21 +191,21 @@ namespace tinyla::geom {
          * All the columns except the last one are changing.
          * Remember the column-major order!
          */
-        m(0, 0) *= s.x();
-        m(1, 0) *= s.y();
-        m(2, 0) *= s.z();
+        m[0, 0] *= s.x();
+        m[1, 0] *= s.y();
+        m[2, 0] *= s.z();
 
-        m(0, 1) *= s.x();
-        m(1, 1) *= s.y();
-        m(2, 1) *= s.z();
+        m[0, 1] *= s.x();
+        m[1, 1] *= s.y();
+        m[2, 1] *= s.z();
 
-        m(0, 2) *= s.x();
-        m(1, 2) *= s.y();
-        m(2, 2) *= s.z();
+        m[0, 2] *= s.x();
+        m[1, 2] *= s.y();
+        m[2, 2] *= s.z();
 
-        m(0, 3) *= s.x();
-        m(1, 3) *= s.y();
-        m(2, 3) *= s.z();
+        m[0, 3] *= s.x();
+        m[1, 3] *= s.y();
+        m[2, 3] *= s.z();
     }
 
     template<typename T>
@@ -220,20 +220,20 @@ namespace tinyla::geom {
          * All the columns except the last one are changing.
          * Remember the column-major order!
          */
-        m(0, 0) *= s.x();
-        m(1, 0) *= s.x();
-        m(2, 0) *= s.x();
-        m(3, 0) *= s.x();
+        m[0, 0] *= s.x();
+        m[1, 0] *= s.x();
+        m[2, 0] *= s.x();
+        m[3, 0] *= s.x();
 
-        m(0, 1) *= s.y();
-        m(1, 1) *= s.y();
-        m(2, 1) *= s.y();
-        m(3, 1) *= s.y();
+        m[0, 1] *= s.y();
+        m[1, 1] *= s.y();
+        m[2, 1] *= s.y();
+        m[3, 1] *= s.y();
 
-        m(0, 2) *= s.z();
-        m(1, 2) *= s.z();
-        m(2, 2) *= s.z();
-        m(3, 2) *= s.z();
+        m[0, 2] *= s.z();
+        m[1, 2] *= s.z();
+        m[2, 2] *= s.z();
+        m[3, 2] *= s.z();
     }
 
     template<typename T>
@@ -311,11 +311,11 @@ namespace tinyla::geom {
             T const clip = z_far - z_near;
 
             auto p = mat<4, T>{mat_init::zero};
-            p(0, 0) = cot / frustum.ar();
-            p(1, 1) = cot;
-            p(2, 2) = -(z_far + z_near) / clip;
-            p(3, 2) = -T{1};
-            p(2, 3) = -(T{2} * z_far * z_near) / clip;
+            p[0, 0] = cot / frustum.ar();
+            p[1, 1] = cot;
+            p[2, 2] = -(z_far + z_near) / clip;
+            p[3, 2] = -T{1};
+            p[2, 3] = -(T{2} * z_far * z_near) / clip;
             return p;
         }
 
@@ -331,11 +331,11 @@ namespace tinyla::geom {
             T const clip = z_far - z_near;
 
             auto p = mat<4, T>{mat_init::zero};
-            p(0, 0) = cot / frustum.ar();
-            p(1, 1) = cot;
-            p(2, 2) = -z_far / clip;
-            p(3, 2) = -T{1};
-            p(2, 3) = -(z_far * z_near) / clip;
+            p[0, 0] = cot / frustum.ar();
+            p[1, 1] = cot;
+            p[2, 2] = -z_far / clip;
+            p[3, 2] = -T{1};
+            p[2, 3] = -(z_far * z_near) / clip;
             return p;
         }
 
@@ -349,10 +349,10 @@ namespace tinyla::geom {
              * | 0   0   0   1 |   | m30   m31   m32   m33 |   | m30           m31           m32           m33         |
              */
             T tmp;
-            m(1, 0) = (tmp = m(1, 0)) * c - m(2, 0) * s;    m(2, 0) = m(2, 0) * c + tmp * s;
-            m(1, 1) = (tmp = m(1, 1)) * c - m(2, 1) * s;    m(2, 1) = m(2, 1) * c + tmp * s;
-            m(1, 2) = (tmp = m(1, 2)) * c - m(2, 2) * s;    m(2, 2) = m(2, 2) * c + tmp * s;
-            m(1, 3) = (tmp = m(1, 3)) * c - m(2, 3) * s;    m(2, 3) = m(2, 3) * c + tmp * s;
+            m[1, 0] = (tmp = m[1, 0]) * c - m[2, 0] * s;    m[2, 0] = m[2, 0] * c + tmp * s;
+            m[1, 1] = (tmp = m[1, 1]) * c - m[2, 1] * s;    m[2, 1] = m[2, 1] * c + tmp * s;
+            m[1, 2] = (tmp = m[1, 2]) * c - m[2, 2] * s;    m[2, 2] = m[2, 2] * c + tmp * s;
+            m[1, 3] = (tmp = m[1, 3]) * c - m[2, 3] * s;    m[2, 3] = m[2, 3] * c + tmp * s;
         }
 
         template<typename T>
@@ -366,10 +366,10 @@ namespace tinyla::geom {
              */
 
             T tmp;
-            m(0, 1) = (tmp = m(0, 1)) * c + m(0, 2) * s;    m(0, 2) = -tmp * s + m(0, 2) * c;
-            m(1, 1) = (tmp = m(1, 1)) * c + m(1, 2) * s;    m(1, 2) = -tmp * s + m(1, 2) * c;
-            m(2, 1) = (tmp = m(2, 1)) * c + m(2, 2) * s;    m(2, 2) = -tmp * s + m(2, 2) * c;
-            m(3, 1) = (tmp = m(3, 1)) * c + m(3, 2) * s;    m(3, 2) = -tmp * s + m(3, 2) * c;
+            m[0, 1] = (tmp = m[0, 1]) * c + m[0, 2] * s;    m[0, 2] = -tmp * s + m[0, 2] * c;
+            m[1, 1] = (tmp = m[1, 1]) * c + m[1, 2] * s;    m[1, 2] = -tmp * s + m[1, 2] * c;
+            m[2, 1] = (tmp = m[2, 1]) * c + m[2, 2] * s;    m[2, 2] = -tmp * s + m[2, 2] * c;
+            m[3, 1] = (tmp = m[3, 1]) * c + m[3, 2] * s;    m[3, 2] = -tmp * s + m[3, 2] * c;
         }
 
         template<typename T>
@@ -382,10 +382,10 @@ namespace tinyla::geom {
              * |  0   0   0   1 |   | m30   m31   m32   m33 |   | m30           m31           m32           m33         |
              */
             T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c + m(2, 0) * s;    m(2, 0) = m(2, 0) * c - tmp * s;
-            m(0, 1) = (tmp = m(0, 1)) * c + m(2, 1) * s;    m(2, 1) = m(2, 1) * c - tmp * s;
-            m(0, 2) = (tmp = m(0, 2)) * c + m(2, 2) * s;    m(2, 2) = m(2, 2) * c - tmp * s;
-            m(0, 3) = (tmp = m(0, 3)) * c + m(2, 3) * s;    m(2, 3) = m(2, 3) * c - tmp * s;
+            m[0, 0] = (tmp = m[0, 0]) * c + m[2, 0] * s;    m[2, 0] = m[2, 0] * c - tmp * s;
+            m[0, 1] = (tmp = m[0, 1]) * c + m[2, 1] * s;    m[2, 1] = m[2, 1] * c - tmp * s;
+            m[0, 2] = (tmp = m[0, 2]) * c + m[2, 2] * s;    m[2, 2] = m[2, 2] * c - tmp * s;
+            m[0, 3] = (tmp = m[0, 3]) * c + m[2, 3] * s;    m[2, 3] = m[2, 3] * c - tmp * s;
         }
 
         template<typename T>
@@ -398,10 +398,10 @@ namespace tinyla::geom {
              * | m30   m31   m32   m33 |   |  0   0   0   1 |   | m30*c - m32*s   m31   m30*s + m32*c   m33 |
              */
             T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c - m(0, 2) * s;    m(0, 2) = tmp * s + m(0, 2) * c;
-            m(1, 0) = (tmp = m(1, 0)) * c - m(1, 2) * s;    m(1, 2) = tmp * s + m(1, 2) * c;
-            m(2, 0) = (tmp = m(2, 0)) * c - m(2, 2) * s;    m(2, 2) = tmp * s + m(2, 2) * c;
-            m(3, 0) = (tmp = m(3, 0)) * c - m(3, 2) * s;    m(3, 2) = tmp * s + m(3, 2) * c;
+            m[0, 0] = (tmp = m[0, 0]) * c - m[0, 2] * s;    m[0, 2] = tmp * s + m[0, 2] * c;
+            m[1, 0] = (tmp = m[1, 0]) * c - m[1, 2] * s;    m[1, 2] = tmp * s + m[1, 2] * c;
+            m[2, 0] = (tmp = m[2, 0]) * c - m[2, 2] * s;    m[2, 2] = tmp * s + m[2, 2] * c;
+            m[3, 0] = (tmp = m[3, 0]) * c - m[3, 2] * s;    m[3, 2] = tmp * s + m[3, 2] * c;
         }
 
         template<typename T>
@@ -414,10 +414,10 @@ namespace tinyla::geom {
              * | 0    0   0   1 |   | m30   m31   m32   m33 |   | m30           m31           m32           m33         |
              */
             T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c - m(1, 0) * s;  m(1, 0) = m(1, 0) * c + tmp * s;
-            m(0, 1) = (tmp = m(0, 1)) * c - m(1, 1) * s;  m(1, 1) = m(1, 1) * c + tmp * s;
-            m(0, 2) = (tmp = m(0, 2)) * c - m(1, 2) * s;  m(1, 2) = m(1, 2) * c + tmp * s;
-            m(0, 3) = (tmp = m(0, 3)) * c - m(1, 3) * s;  m(1, 3) = m(1, 3) * c + tmp * s;
+            m[0, 0] = (tmp = m[0, 0]) * c - m[1, 0] * s;  m[1, 0] = m[1, 0] * c + tmp * s;
+            m[0, 1] = (tmp = m[0, 1]) * c - m[1, 1] * s;  m[1, 1] = m[1, 1] * c + tmp * s;
+            m[0, 2] = (tmp = m[0, 2]) * c - m[1, 2] * s;  m[1, 2] = m[1, 2] * c + tmp * s;
+            m[0, 3] = (tmp = m[0, 3]) * c - m[1, 3] * s;  m[1, 3] = m[1, 3] * c + tmp * s;
         }
 
         template<typename T>
@@ -431,10 +431,10 @@ namespace tinyla::geom {
              */
 
             T tmp;
-            m(0, 0) = (tmp = m(0, 0)) * c + m(0, 1) * s;    m(0, 1) = -tmp * s + m(0, 1) * c;
-            m(1, 0) = (tmp = m(1, 0)) * c + m(1, 1) * s;    m(1, 1) = -tmp * s + m(1, 1) * c;
-            m(2, 0) = (tmp = m(2, 0)) * c + m(2, 1) * s;    m(2, 1) = -tmp * s + m(2, 1) * c;
-            m(3, 0) = (tmp = m(3, 0)) * c + m(3, 1) * s;    m(3, 1) = -tmp * s + m(3, 1) * c;
+            m[0, 0] = (tmp = m[0, 0]) * c + m[0, 1] * s;    m[0, 1] = -tmp * s + m[0, 1] * c;
+            m[1, 0] = (tmp = m[1, 0]) * c + m[1, 1] * s;    m[1, 1] = -tmp * s + m[1, 1] * c;
+            m[2, 0] = (tmp = m[2, 0]) * c + m[2, 1] * s;    m[2, 1] = -tmp * s + m[2, 1] * c;
+            m[3, 0] = (tmp = m[3, 0]) * c + m[3, 1] * s;    m[3, 1] = -tmp * s + m[3, 1] * c;
         }
     }
 }

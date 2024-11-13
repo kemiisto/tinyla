@@ -33,8 +33,8 @@ namespace tinyla
         constexpr explicit mat(mat_init init, vec<N,T> v = vec<N,T>{vec_init::zero});
         constexpr mat(std::initializer_list<T> values);
 
-        constexpr T& operator()(std::size_t row, std::size_t column);
-        constexpr T operator()(std::size_t row, std::size_t column) const;
+        constexpr T& operator[](std::size_t row, std::size_t column);
+        constexpr T operator[](std::size_t row, std::size_t column) const;
 
         constexpr mat operator*=(const mat& other);
 
