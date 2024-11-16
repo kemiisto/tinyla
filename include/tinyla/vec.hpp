@@ -102,9 +102,6 @@ namespace tinyla
         template<typename U>
         constexpr vec<N,U> cast() const noexcept;
 
-        static constexpr T dot(vec vec1, vec vec2) noexcept;
-        static constexpr vec cross(vec vec1, vec vec2) noexcept requires(N == 3);
-
         /**
         * Returns the unit normal vector of a plane spanned by vectors b - a and c - a.
         * Can be used to calculate a normal to a triangle with vertices a, b, c at point a.
@@ -118,6 +115,7 @@ namespace tinyla
         static constexpr vec normal(std::array<vec, 3> const& vs) noexcept requires(N == 3);
 
         friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
+        friend constexpr T dot <>(vec<N, T> vec1, vec<N, T> vec2) noexcept;
     private:
         std::array<T, N> v;
     };
@@ -134,6 +132,14 @@ namespace tinyla
     using vec2f = vec<2, float>;
     using vec3f = vec<3, float>;
     using vec4f = vec<4, float>;
+
+    template<std::size_t N, typename T>
+    requires(N >= 2)
+    constexpr T dot(vec<N, T> vec1, vec<N, T> vec2) noexcept;
+
+    template<std::size_t N, typename T>
+    requires(N >= 2)
+    constexpr vec<N, T> cross(vec<N, T> vec1, vec<N, T> vec2) noexcept requires(N == 3);
 }
 
 #include "vec.inl"

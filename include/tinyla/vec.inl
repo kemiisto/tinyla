@@ -205,24 +205,6 @@ namespace tinyla
 
     template<std::size_t N, typename T>
     requires (N >= 2)
-    constexpr T vec<N, T>::dot(vec<N, T> vec1, vec<N, T> vec2) noexcept
-    {
-        return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
-    }
-
-    template<std::size_t N, typename T>
-    requires (N >= 2)
-    constexpr vec<N, T> vec<N, T>::cross(vec<N, T> vec1, vec<N, T> vec2) noexcept requires(N == 3)
-    {
-        return {
-            vec1.y() * vec2.z() - vec1.z() * vec2.y(),
-            vec1.z() * vec2.x() - vec1.x() * vec2.z(),
-            vec1.x() * vec2.y() - vec1.y() * vec2.x(),
-        };
-    }
-
-    template<std::size_t N, typename T>
-    requires (N >= 2)
     constexpr vec<N, T> vec<N, T>::normal(vec<N, T> a, vec<N, T> b, vec<N, T> c) noexcept requires(N == 3)
     {
         auto const ab = b - a;
@@ -238,6 +220,24 @@ namespace tinyla
         auto const& b = vs[1];
         auto const& c = vs[2];
         return normal(a, b, c);
+    }
+
+    template<std::size_t N, typename T>
+    requires (N >= 2)
+    constexpr T dot(vec<N, T> vec1, vec<N, T> vec2) noexcept
+    {
+        return std::inner_product(vec1.v.begin(), vec1.v.end(), vec2.v.begin(), T{0});
+    }
+
+    template<std::size_t N, typename T>
+    requires (N >= 2)
+    constexpr vec<N, T> cross(vec<N, T> vec1, vec<N, T> vec2) noexcept requires(N == 3)
+    {
+        return {
+            vec1.y() * vec2.z() - vec1.z() * vec2.y(),
+            vec1.z() * vec2.x() - vec1.x() * vec2.z(),
+            vec1.x() * vec2.y() - vec1.y() * vec2.x(),
+        };
     }
 }
 
