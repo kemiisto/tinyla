@@ -66,6 +66,19 @@ namespace tinyla
         constexpr T& a() requires(N >= 4) { return v[3]; }
         constexpr T a() const requires(N >= 4) { return v[3]; }
 
+        // s, t, p, q components
+        constexpr T& s() { return v[0]; }
+        constexpr T s() const { return v[0]; }
+
+        constexpr T& t() { return v[1]; }
+        constexpr T t() const { return v[1]; }
+
+        constexpr T& p() requires(N >= 3) { return v[2]; }
+        constexpr T p() const requires(N >= 3) { return v[2]; }
+
+        constexpr T& q() requires(N >= 4) { return v[3]; }
+        constexpr T q() const requires(N >= 4) { return v[3]; }
+
         constexpr T* data() noexcept { return v.data(); }
         constexpr const T* data() const noexcept { return v.data(); }
 
