@@ -83,7 +83,7 @@ namespace tinyla::geom {
     mat<4,T> perspective(frustum<T> const& frustum, handedness handedness, clip_volume clip_volume);
 
     template<typename T>
-    vec<2, T> project(mat<4, T> const& m, vec<4, T> const& v);
+    vec<4, T> project(mat<4, T> const& m, vec<4, T> const& v);
 
     template<typename T>
     mat<4, T> scaling(vec<3, T> const& s);

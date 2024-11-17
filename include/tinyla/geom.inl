@@ -46,13 +46,15 @@ namespace tinyla::geom {
     }
 
     template<typename T>
-    vec<2, T> project(mat<4, T> const& m, vec<4, T> const& v)
+    vec<4, T> project(mat<4, T> const& m, vec<4, T> const& v)
     {
         auto result =  m * v;
         if (result.w() != T{0}) {
-            result /= result.w();
+            result.x() /= result.w();
+            result.y() /= result.w();
+            result.z() /= result.w();
         }
-        return {result.x(), result.y()};
+        return result;
     }
 
     template<typename T>
