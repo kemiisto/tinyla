@@ -2,6 +2,7 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #include "compare.hpp"
+#include <vector>
 
 constexpr auto v4a = tinyla::vec4f{1.0f, 2.0f, 3.0f, 4.0f};
 constexpr auto v4b = tinyla::vec4f{4.0f, 5.0f, 6.0f, 7.0f};
@@ -11,7 +12,7 @@ constexpr auto v4a_minus_v4b = tinyla::vec4f{1.0f - 4.0f, 2.0f - 5.0f, 3.0f - 6.
 constexpr auto v4a_times_v4b = tinyla::vec4f{1.0f * 4.0f, 2.0f * 5.0f, 3.0f * 6.0f, 4.0f * 7.0f};
 constexpr auto v4a_divided_by_v4b = tinyla::vec4f{1.0f / 4.0f, 2.0f / 5.0f, 3.0f / 6.0f, 4.0f / 7.0f};
 
-TEST_CASE("vec2 size", "[vec2]")
+TEST_CASE("vec2 size in bytes", "[vec2]")
 {
     REQUIRE(sizeof(tinyla::vec2f) == 2 * sizeof(float));
 }
@@ -21,6 +22,13 @@ TEST_CASE("vec2 is constructed from initializer list", "[vec2]")
     constexpr auto v = tinyla::vec2f{0.0f, 0.1f};
     constexpr auto a = std::array{0.0f, 0.1f};
     compare(v, a);
+}
+
+TEST_CASE("vec2 is created using variadic template constructor", "[vec2]")
+{
+    auto v = std::vector<tinyla::vec2f>{};
+    v.emplace_back(0.0f, 0.0f);
+    compare(v[0], tinyla::vec2f{0.0f, 0.0f});
 }
 
 TEST_CASE("vec2 length", "[vec2]")

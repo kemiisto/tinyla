@@ -21,12 +21,19 @@ namespace tinyla
         zero
     };
 
+    template<typename T, typename... Types>
+    concept is_all_same = (... && std::is_same_v<T, Types>);
+
     template<std::size_t N, typename T>
     requires(N >= 2)
     class vec {
     public:
         constexpr explicit vec(vec_init init);
         constexpr vec(std::initializer_list<T> values);
+
+        template<is_all_same<T>... Types>
+        requires (sizeof...(Types) == N)
+        constexpr explicit vec(Types... args) : v {args...} {}
 
         template<std::size_t M>
         constexpr vec(const vec<M, T>& smaller_vec, std::initializer_list<T> values) requires(M < N);
