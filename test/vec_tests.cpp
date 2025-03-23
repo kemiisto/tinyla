@@ -118,10 +118,10 @@ TEST_CASE("vec4 component access", "[vec4]")
 
 TEST_CASE("vec4 data", "[vec4]")
 {
-    tinyla::vec4f tglVec {0.0f, 0.1f, 0.2f, 0.3f};
+    tinyla::vec4f tgl_vec {0.0f, 0.1f, 0.2f, 0.3f};
     float a[4] {0.0f, 0.1f, 0.2f, 0.3f};
 
-    float* data = tglVec.data();
+    float* data = tgl_vec.data();
     for (std::size_t i = 0; i < 4; ++i) {
         REQUIRE(data[i] == Catch::Approx(a[i]));
     }
@@ -149,8 +149,8 @@ TEST_CASE("vec4 operator-=", "[vec4]")
 
 TEST_CASE("vec4 operator-", "[vec4]")
 {
-    constexpr auto tglVec = v4a - v4b;
-    compare(tglVec, v4a_minus_v4b);
+    constexpr auto tgl_vec = v4a - v4b;
+    compare(tgl_vec, v4a_minus_v4b);
 }
 
 TEST_CASE("vec4 operator*=", "[vec4]")

@@ -28,11 +28,11 @@ void compare(const tinyla::vec<N,T>& v1, const tinyla::vec<N,T>& v2)
 
 template<std::size_t N, typename T>
 requires(std::is_floating_point_v<T>)
-void compare(const tinyla::vec<N,T>& tglVec, const std::array<T,N>& glmVec)
+void compare(const tinyla::vec<N,T>& tgl_vec, const std::array<T,N>& glm_vec)
 {
     for (std::size_t i = 0; i < N; ++i) {
         CAPTURE(i);
-        REQUIRE(tglVec[i] == Catch::Approx(glmVec[i]));
+        REQUIRE(tgl_vec[i] == Catch::Approx(glm_vec[i]));
     }
 }
 
