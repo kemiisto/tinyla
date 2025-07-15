@@ -186,34 +186,4 @@ constexpr bool tinyla::mat<N,T>::close_to(mat<N,T> const& other)
     return true;
 }
 
-template<std::size_t N, typename T>
-requires(N >= 2)
-tinyla::mat<N,T> tinyla::operator*(const mat<N,T>& a, const mat<N,T>& b)
-{
-    auto c = tinyla::mat<N,T>{mat_init::uninitialized};
-    for (size_t i = 0; i < N; ++i) {
-        for (size_t j = 0; j < N; ++j) {
-            c.m[i][j] = T{0};
-            for (size_t k = 0; k < N; ++k) {
-                c.m[i][j] += a.m[k][j] * b.m[i][k];
-            }
-        }
-    }
-    return c;
-}
-
-template<std::size_t N, typename T>
-requires(N >= 2)
-tinyla::vec<N,T> tinyla::operator*(const mat<N,T>& m, const vec<N,T>& v)
-{
-    auto mv = tinyla::vec<N,T>{vec_init::uninitialized};
-    for (size_t i = 0; i < N; ++i) {
-        mv.v[i] = T{0};
-        for (size_t j = 0; j < N; ++j) {
-            mv.v[i] += m.m[j][i] * v.v[j];
-        }
-    }
-    return mv;
-}
-
 #endif // TINYLA_MAT_INL

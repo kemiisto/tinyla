@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <concepts>
+#include <cmath>
 #include <numeric>
 
 namespace tinyla

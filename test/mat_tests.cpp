@@ -16,11 +16,11 @@ TEST_CASE("mat3 is constructed from initializer list", "[mat3]")
         1.0f, 1.1f, 1.2f,
         2.0f, 2.1f, 2.2f
     };
-    constexpr auto a = std::array<std::array<float,3>,3> {
-        0.0f, 0.1f, 0.2f,
-        1.0f, 1.1f, 1.2f,
-        2.0f, 2.1f, 2.2f
-    };
+    constexpr auto a = std::array<std::array<float,3>,3> {{
+        {0.0f, 0.1f, 0.2f},
+        {1.0f, 1.1f, 1.2f},
+        {2.0f, 2.1f, 2.2f}
+    }};
     compare(m, a);
 }
 
@@ -32,24 +32,24 @@ TEST_CASE("mat4 is constructed from initializer list", "[mat4]")
         2.0f, 2.1f, 2.2f, 2.3f,
         3.0f, 3.1f, 3.2f, 3.3f
     };
-    constexpr auto a = std::array<std::array<float, 4>, 4> {
-        0.0f, 0.1f, 0.2f, 0.3f,
-        1.0f, 1.1f, 1.2f, 1.3f,
-        2.0f, 2.1f, 2.2f, 2.3f,
-        3.0f, 3.1f, 3.2f, 3.3f
-    };
+    constexpr auto a = std::array<std::array<float, 4>, 4> {{
+        {0.0f, 0.1f, 0.2f, 0.3f},
+        {1.0f, 1.1f, 1.2f, 1.3f},
+        {2.0f, 2.1f, 2.2f, 2.3f},
+        {3.0f, 3.1f, 3.2f, 3.3f}
+    }};
     compare(m, a);
 }
 
 TEST_CASE("mat4 is constructed as identity matrix", "[mat4]")
 {
     constexpr auto m = tinyla::mat4f{tinyla::mat_init::identity};
-    constexpr auto a = std::array<std::array<float, 4>, 4> {
-        1.0f, 0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f, 0.0f,
-        0.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 1.0f
-    };
+    constexpr auto a = std::array<std::array<float, 4>, 4> {{
+        {1.0f, 0.0f, 0.0f, 0.0f},
+        {0.0f, 1.0f, 0.0f, 0.0f},
+        {0.0f, 0.0f, 1.0f, 0.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f}
+    }};
     compare(m, a);
 }
 
@@ -117,10 +117,10 @@ TEST_CASE("operator*", "[mat4]")
 TEST_CASE("det2")
 {
     constexpr float a[][4] = {
-         1.0f,  2.0f,  3.0f,  4.0f,
-         5.0f,  6.0f,  7.0f,  8.0f,
-         9.0f, 10.0f, 11.0f, 12.0f,
-        13.0f, 14.0f, 15.0f, 16.0f
+        { 1.0f,  2.0f,  3.0f,  4.0f},
+        { 5.0f,  6.0f,  7.0f,  8.0f},
+        { 9.0f, 10.0f, 11.0f, 12.0f},
+        {13.0f, 14.0f, 15.0f, 16.0f}
     };
     REQUIRE(det2(a, 0, 1, 0, 1) == Catch::Approx( -4.0f));
     REQUIRE(det2(a, 1, 2, 1, 2) == Catch::Approx( -4.0f));
@@ -131,10 +131,10 @@ TEST_CASE("det2")
 TEST_CASE("det3")
 {
     constexpr float a[][4] = {
-        1.0f,  2.0f,  3.0f,  4.0f,
-        5.0f,  6.0f,  7.0f,  8.0f,
-        9.0f, 10.0f, 11.0f, 12.0f,
-       13.0f, 14.0f, 15.0f, 16.0f
+       { 1.0f,  2.0f,  3.0f,  4.0f},
+       { 5.0f,  6.0f,  7.0f,  8.0f},
+       { 9.0f, 10.0f, 11.0f, 12.0f},
+       {13.0f, 14.0f, 15.0f, 16.0f}
    };
     REQUIRE(det3(a, 0, 1, 2, 0, 1, 2) == Catch::Approx(0.0f));
     REQUIRE(det3(a, 1, 2, 3, 1, 2, 3) == Catch::Approx(0.0f));
@@ -144,10 +144,10 @@ TEST_CASE("det3")
 TEST_CASE("det4")
 {
     constexpr float a[][4] = {
-        1.0f,  2.0f,  3.0f,  4.0f,
-        5.0f,  6.0f,  7.0f,  8.0f,
-        9.0f, 10.0f, 11.0f, 12.0f,
-       13.0f, 14.0f, 15.0f, 16.0f
+       { 1.0f,  2.0f,  3.0f,  4.0f},
+       { 5.0f,  6.0f,  7.0f,  8.0f},
+       { 9.0f, 10.0f, 11.0f, 12.0f},
+       {13.0f, 14.0f, 15.0f, 16.0f}
    };
     REQUIRE(det4(a) == Catch::Approx(0.0f));
 }

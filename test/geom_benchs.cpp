@@ -4,7 +4,7 @@
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 
-constexpr auto zero = tinyla::mat4f {
+[[maybe_unused]] constexpr auto zero = tinyla::mat4f {
     0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 0.0f, 0.0f,
@@ -18,7 +18,7 @@ constexpr auto unique = tinyla::mat4f {
     13.0f, 14.0f, 15.0f, 16.0f
 };
 
-constexpr auto identity = tinyla::mat4f {
+[[maybe_unused]] constexpr auto identity = tinyla::mat4f {
     1.0f, 0.0f, 0.0f, 0.0f,
     0.0f, 1.0f, 0.0f, 0.0f,
     0.0f, 0.0f, 1.0f, 0.0f,

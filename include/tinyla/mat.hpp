@@ -24,7 +24,7 @@ namespace tinyla
 
     template<std::size_t N, typename T>
     requires(N >= 2)
-    vec<N,T> operator*(const mat<N,T>& m, const vec<N,T>& v);
+    vec<N,T> operator*(const mat<N,T>& a, const vec<N,T>& b);
 
     template<std::size_t N, typename T>
     requires(N >= 2)
@@ -50,8 +50,31 @@ namespace tinyla
 
         constexpr bool close_to(const mat& other);
 
-        friend mat<N,T> operator* <>(const mat<N,T>& a, const mat<N,T>& b);
-        friend vec<N,T> operator* <>(const mat<N,T>& a, const vec<N,T>& b);
+        friend mat operator*(const mat& a, const mat& b)
+        {
+            auto c = tinyla::mat<N,T>{mat_init::uninitialized};
+            for (size_t i = 0; i < N; ++i) {
+                for (size_t j = 0; j < N; ++j) {
+                    c.m[i][j] = T{0};
+                    for (size_t k = 0; k < N; ++k) {
+                        c.m[i][j] += a.m[k][j] * b.m[i][k];
+                    }
+                }
+            }
+            return c;
+        }
+        friend vec<N, T> operator*(const mat& a, const vec<N, T>& b)
+        {
+            auto mv = tinyla::vec<N,T>{vec_init::uninitialized};
+            for (size_t i = 0; i < N; ++i) {
+                mv.v[i] = T{0};
+                for (size_t j = 0; j < N; ++j) {
+                    mv.v[i] += a.m[j][i] * b.v[j];
+                }
+            }
+            return mv;
+        }
+
     private:
         T m[N][N];
     };
