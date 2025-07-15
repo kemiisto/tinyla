@@ -1,5 +1,4 @@
 #include <tinyla/vec.hpp>
-#define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #include "compare.hpp"
 #include <vector>
@@ -218,9 +217,4 @@ TEST_CASE("vec4 from vec3")
     REQUIRE(v4[1] == 1);
     REQUIRE(v4[2] == 2);
     REQUIRE(v4[3] == 3);
-}
-
-int main(int argc, const char* argv[])
-{
-    return Catch::Session().run(argc, argv);
 }

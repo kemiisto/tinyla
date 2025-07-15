@@ -1,7 +1,5 @@
 #include <tinyla/geom.hpp>
 #include <tinyla/mat.hpp>
-#include <tinyla/util.hpp>
-#define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #include "compare.hpp"
 #include "data.hpp"
@@ -179,9 +177,4 @@ TEST_CASE("mat4 post_rotate around z-axis", "[mat4]")
     }};
 
     compare(m, a);
-}
-
-int main(int argc, const char* argv[])
-{
-    return Catch::Session().run(argc, argv);
 }

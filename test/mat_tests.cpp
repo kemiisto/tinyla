@@ -1,7 +1,5 @@
 #include <tinyla/geom.hpp>
 #include <tinyla/mat.hpp>
-#include <tinyla/util.hpp>
-#define CATCH_CONFIG_RUNNER
 #include <catch2/catch_all.hpp>
 #include "compare.hpp"
 #include "data.hpp"
@@ -187,9 +185,4 @@ TEST_CASE("mat4 * vec4", "[mat4]")
     constexpr auto v = tinyla::vec4i {1, 2, 3, 4};
     const auto mv = m * v;
     compare(mv, tinyla::vec4i{30, 70, 110, 150});
-}
-
-int main(int argc, const char* argv[])
-{
-    return Catch::Session().run(argc, argv);
 }
