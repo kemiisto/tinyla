@@ -22,11 +22,24 @@ namespace tinyla::geom {
     template<typename T>
     class angle {
     public:
-        constexpr static angle from_radians(T radians) { return angle{radians}; }
-        constexpr static angle from_degrees(T degrees) { return angle{degrees * (std::numbers::pi_v<T> / 180)}; }
+        constexpr static angle from_radians(T radians) { return angle{radians}.wrap(); }
+        constexpr static angle from_degrees(T degrees)
+        {
+            return angle{degrees * (std::numbers::pi_v<T> / 180)}.wrap();
+        }
         [[nodiscard]] T radians() const { return m_radians; }
+        // Normalizes angle to [0, 2π)
+        [[nodiscard]] constexpr angle wrap() const noexcept
+        {
+            T two_pi = 2 * std::numbers::pi_v<T>;
+            T r = std::fmod(m_radians, two_pi);
+            if (r < 0) r += two_pi;
+            return angle{r};
+        }
         // Unary minus (negation)
-        constexpr angle operator-() noexcept { return angle{-m_radians}; }
+        constexpr angle operator-() noexcept { return angle{-m_radians}.wrap(); }
+        // Scalar multiplication
+        angle operator*(T c) const noexcept { return angle{m_radians * c}.wrap(); }
     private:
         explicit constexpr angle(T r) : m_radians{r} {}
         T m_radians;
